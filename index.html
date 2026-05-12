@@ -1,66 +1,196 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Maison Lash | Book de Servicios</title>
-    <link rel="stylesheet" href="css/index.css">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400&family=Playfair+Display:wght@700&family=Cinzel&display=swap" rel="stylesheet">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="theme-color" content="#071a1a">
+  <title>Maison Lash — Catálogo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;1,300&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="CSS/styles.css">
 </head>
 <body>
 
-    <header class="main-header">
-        <h1 class="brand-name">MAISON LASH</h1>
-        <span class="brand-sub">BY CAMI PORTELA</span>
-    </header>
-
-    <div class="book-wrapper">
-        <div id="book" class="book">
-            <div class="page" id="p1">
-                <div class="front">
-                    <div class="content">
-                        <h2>Pestañas</h2>
-                        <div class="service-img" style="background-image: url('img/pestanas.jpg');"></div>
-                        <p>Realza tu mirada con nuestras técnicas de extensión y lifting.</p>
-                        <div class="price">$150.000</div>
-                        <button class="btn-agendar" onclick="abrirModal('Pestañas')">Reservar Cupo</button>
-                    </div>
-                </div>
-                <div class="back"></div>
-            </div>
-
-            <div class="page" id="p2">
-                <div class="front">
-                    <div class="content">
-                        <h2>Cejas</h2>
-                        <div class="service-img" style="background-image: url('img/cejas.jpg');"></div>
-                        <p>Diseño, depilación y laminado para un marco perfecto.</p>
-                        <div class="price">$80.000</div>
-                        <button class="btn-agendar" onclick="abrirModal('Cejas')">Reservar Cupo</button>
-                    </div>
-                </div>
-                <div class="back"></div>
-            </div>
-
-            <div class="page" id="p3">
-                <div class="front">
-                    <div class="content">
-                        <h2>Labios</h2>
-                        <div class="service-img" style="background-image: url('img/labios.jpg');"></div>
-                        <p>Micropigmentación y humectación profunda para labios radiantes.</p>
-                        <div class="price">$200.000</div>
-                        <button class="btn-agendar" onclick="abrirModal('Labios')">Reservar Cupo</button>
-                    </div>
-                </div>
-                <div class="back"></div>
-            </div>
+  <!-- ===== LOGIN ===== -->
+  <div id="login-screen" class="screen">
+    <div class="login-card">
+      <div class="login-logo">
+        <div class="lash-icon">🌸</div>
+        <h1>MAISON LASH</h1>
+        <p class="sub">BY CAMI PORTELA</p>
+      </div>
+      <form id="login-form" autocomplete="off">
+        <div class="form-group">
+          <label for="login-username">Usuario</label>
+          <input type="text" id="login-username" placeholder="Ingresa tu usuario" autocomplete="username" required>
         </div>
+        <div class="form-group">
+          <label for="login-password">Contraseña</label>
+          <input type="password" id="login-password" placeholder="••••••••" autocomplete="current-password" required>
+        </div>
+        <button type="submit" class="btn-login">Ingresar</button>
+        <div class="login-error" id="login-error"></div>
+      </form>
+      <div class="login-demo-hint">
+        usuario: <strong>usuario</strong> / clave: <strong>user123</strong><br>
+        admin: <strong>admin</strong> / clave: <strong>admin123</strong>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== PANTALLA USUARIO ===== -->
+  <div id="user-screen" class="screen">
+
+    <div class="topbar">
+      <div class="topbar-brand">
+        <div class="brand-icon">🌸</div>
+        <span class="brand-name">MAISON LASH</span>
+      </div>
+      <div class="topbar-actions">
+        <span class="topbar-role" id="user-role-badge">Cliente</span>
+        <button class="btn-icon" title="Cerrar sesión" onclick="logout()">⏻</button>
+      </div>
     </div>
 
-    <a href="https://wa.me/tunumero" class="whatsapp-float" target="_blank">
-        <img src="img/ws-icon.png" alt="WhatsApp Help">
-    </a>
+    <!-- Pestañas de categoría -->
+    <div class="category-tabs">
+      <button class="cat-tab active" data-cat="pestanas">👁 Pestañas</button>
+      <button class="cat-tab"        data-cat="cejas">🌿 Cejas</button>
+      <button class="cat-tab"        data-cat="labios">💋 Labios</button>
+    </div>
 
-    <script src="js/main.js"></script>
+    <!-- Visor libro (una página / producto) -->
+    <div class="book-scene">
+      <div class="book-wrapper" id="book-wrapper">
+        <div class="book-card" id="book-card">
+          <!-- Renderizado por JS -->
+        </div>
+        <div class="swipe-hint" id="swipe-hint">← desliza para explorar →</div>
+      </div>
+
+      <div class="book-nav">
+        <button class="nav-btn" id="btn-prev" onclick="navigateBook('prev')">&#8249;</button>
+        <div class="page-dots" id="page-dots"></div>
+        <button class="nav-btn" id="btn-next" onclick="navigateBook('next')">&#8250;</button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ===== PANTALLA ADMIN ===== -->
+  <div id="admin-screen" class="screen">
+
+    <div class="topbar">
+      <div class="topbar-brand">
+        <div class="brand-icon">🌸</div>
+        <span class="brand-name">MAISON LASH</span>
+      </div>
+      <div class="topbar-actions">
+        <span class="topbar-role" id="admin-role-badge">Admin</span>
+        <button class="btn-icon" title="Cerrar sesión" onclick="logout()">⏻</button>
+      </div>
+    </div>
+
+    <div class="admin-tabs">
+      <button class="admin-tab active" data-tab="add">➕ Agregar</button>
+      <button class="admin-tab"        data-tab="list">📋 Servicios</button>
+    </div>
+
+    <!-- Panel: Agregar -->
+    <div id="panel-add" class="admin-panel active">
+      <div class="form-card">
+        <h3>Nuevo Servicio</h3>
+        <form id="add-product-form" autocomplete="off">
+          <div class="field-group">
+            <label for="add-category">Categoría</label>
+            <select id="add-category">
+              <option value="pestanas">👁 Pestañas</option>
+              <option value="cejas">🌿 Cejas</option>
+              <option value="labios">💋 Labios</option>
+            </select>
+          </div>
+          <div class="field-group">
+            <label for="add-name">Nombre del servicio</label>
+            <input type="text" id="add-name" placeholder="Ej: Extensiones Clásicas" required>
+          </div>
+          <div class="field-group">
+            <label for="add-desc">Descripción</label>
+            <textarea id="add-desc" placeholder="Describe el servicio..." required></textarea>
+          </div>
+          <div class="field-group">
+            <label for="add-price">Precio</label>
+            <input type="text" id="add-price" placeholder="Ej: $120.000" required>
+          </div>
+          <div class="field-group">
+            <label>Imagen</label>
+            <div class="image-upload-area">
+              <input type="file" id="add-image-input" accept="image/*">
+              <div class="upload-icon">🖼️</div>
+              <p>Toca para seleccionar una imagen</p>
+              <p class="upload-hint">JPG, PNG, WEBP — máx 5MB</p>
+            </div>
+            <img id="add-image-preview" class="image-preview" alt="Vista previa">
+          </div>
+          <button type="submit" class="btn-primary">Guardar Servicio</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Panel: Lista -->
+    <div id="panel-list" class="admin-panel">
+      <div id="admin-product-list" class="admin-product-list"></div>
+    </div>
+
+  </div>
+
+  <!-- ===== MODAL EDICIÓN ===== -->
+  <div id="edit-modal" class="modal-overlay">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3>Editar Servicio</h3>
+        <button class="modal-close" onclick="closeEditModal()">✕</button>
+      </div>
+      <form id="edit-product-form" autocomplete="off">
+        <div class="field-group">
+          <label for="edit-category">Categoría</label>
+          <select id="edit-category">
+            <option value="pestanas">👁 Pestañas</option>
+            <option value="cejas">🌿 Cejas</option>
+            <option value="labios">💋 Labios</option>
+          </select>
+        </div>
+        <div class="field-group">
+          <label for="edit-name">Nombre</label>
+          <input type="text" id="edit-name" required>
+        </div>
+        <div class="field-group">
+          <label for="edit-desc">Descripción</label>
+          <textarea id="edit-desc" required></textarea>
+        </div>
+        <div class="field-group">
+          <label for="edit-price">Precio</label>
+          <input type="text" id="edit-price" required>
+        </div>
+        <div class="field-group">
+          <label>Imagen</label>
+          <div class="image-upload-area">
+            <input type="file" id="edit-image-input" accept="image/*">
+            <div class="upload-icon">🖼️</div>
+            <p>Toca para cambiar la imagen</p>
+            <p class="upload-hint">Deja vacío para mantener la actual</p>
+          </div>
+          <img id="edit-image-preview" class="image-preview" alt="Vista previa">
+        </div>
+        <button type="submit" class="btn-primary">Guardar Cambios</button>
+        <button type="button" class="btn-secondary" onclick="closeEditModal()">Cancelar</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ===== TOAST ===== -->
+  <div id="toast" class="toast"></div>
+
+  <script src="JavaScript/app.js"></script>
 </body>
 </html>
