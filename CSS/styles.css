@@ -1,4 +1,134 @@
-﻿/* ===== FONTS ===== */
+﻿/* ===== BOSS EMPLEADOS ===== */
+#boss-empleado-list {
+  margin-top: 36px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 24px;
+}
+/* ===== BOSS PRODUCTOS ===== */
+#boss-producto-list {
+  margin-top: 36px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 24px;
+}
+.admin-product-card {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(201,160,32,0.13);
+  border-radius: 16px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+  padding: 18px 18px 14px 18px;
+  display: flex;
+  gap: 18px;
+  align-items: flex-start;
+  min-height: 120px;
+}
+.admin-product-img {
+  width: 70px; height: 70px;
+  border-radius: 12px;
+  background: rgba(201,160,32,0.07);
+  display: flex; align-items: center; justify-content: center;
+  overflow: hidden;
+}
+.admin-product-img img {
+  width: 100%; height: 100%; object-fit: cover;
+  border-radius: 12px;
+}
+.img-placeholder {
+  font-size: 2.2rem;
+  color: #c9a02077;
+}
+.admin-product-info {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.admin-product-cat {
+  font-size: 0.7rem;
+  color: var(--gold-light);
+  font-family: var(--font-brand);
+  letter-spacing: 1.5px;
+  margin-bottom: 2px;
+}
+.admin-product-name {
+  font-size: 1.01rem;
+  color: var(--gold-pale);
+  font-family: var(--font-brand);
+  font-weight: 600;
+}
+.admin-product-desc {
+  font-size: 0.92rem;
+  color: #fff9;
+  margin-top: 2px;
+}
+/* ===== JEFE (BOSS) ===== */
+#boss-screen {
+  background: var(--teal-gradient);
+  align-items: stretch;
+  justify-content: flex-start;
+  padding: 0;
+  overflow-y: auto;
+}
+.boss-menu {
+  display: flex;
+  gap: 0;
+  background: rgba(255,255,255,0.03);
+  border-bottom: 1px solid rgba(201,160,32,0.13);
+  box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+  padding: 0 0 0 0;
+  z-index: 10;
+}
+.boss-menu-btn {
+  flex: 1 1 0;
+  background: none;
+  border: none;
+  color: var(--gold-pale);
+  font-family: var(--font-brand);
+  font-size: 1.01rem;
+  letter-spacing: 2px;
+  padding: 18px 0 14px 0;
+  cursor: pointer;
+  transition: background 0.18s, color 0.18s;
+  border-bottom: 2.5px solid transparent;
+}
+.boss-menu-btn.active,
+.boss-menu-btn:focus {
+  background: rgba(201,160,32,0.08);
+  color: var(--gold-light);
+  border-bottom: 2.5px solid var(--gold-light);
+}
+.boss-content {
+  flex: 1 1 auto;
+  padding: 0;
+  background: none;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+.boss-section {
+  display: none;
+  padding: 32px 0 0 0;
+  max-width: 900px;
+  margin: 0 auto;
+}
+.boss-section:not(.hidden) {
+  display: block;
+}
+.boss-section h2 {
+  font-family: var(--font-brand);
+  color: var(--gold-light);
+  font-size: 1.3rem;
+  letter-spacing: 2.5px;
+  margin-bottom: 18px;
+  text-align: left;
+}
+
+/* Reutilizar panel de servicios admin para jefe */
+#boss-servicios-content {
+  margin-top: 0;
+}
+/* ===== FONTS ===== */
 @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;1,300&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&display=swap');
 
 /* ===== RESET ===== */

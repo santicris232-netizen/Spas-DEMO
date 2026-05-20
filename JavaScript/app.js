@@ -1,7 +1,113 @@
-﻿// ===== USUARIOS =====
+﻿// ===== JEFE: EMPLEADOS (VISUAL) =====
+let bossEmpleados = [];
+function setupBossEmpleados() {
+  const form = document.getElementById('boss-add-empleado-form');
+  const list = document.getElementById('boss-empleado-list');
+  const imgInput = document.getElementById('boss-emp-image-input');
+  const imgPreview = document.getElementById('boss-emp-image-preview');
+  const serviciosSel = document.getElementById('boss-emp-servicios');
+  if (!form || !list || !serviciosSel) return;
+  // Rellenar servicios disponibles (de productos actuales)
+  serviciosSel.innerHTML = '';
+  (products || []).forEach(p => {
+    const opt = document.createElement('option');
+    opt.value = p.name;
+    opt.textContent = p.name;
+    serviciosSel.appendChild(opt);
+  });
+  form.addEventListener('submit', e => {
+    e.preventDefault();
+    const nombre = document.getElementById('boss-emp-nombre').value.trim();
+    const correo = document.getElementById('boss-emp-correo').value.trim();
+    const cel = document.getElementById('boss-emp-cel').value.trim();
+    const rol = document.getElementById('boss-emp-rol').value.trim();
+    const usuario = document.getElementById('boss-emp-usuario').value.trim();
+    const img = imgPreview.src && imgPreview.src.startsWith('data:') ? imgPreview.src : '';
+    const servicios = Array.from(serviciosSel.selectedOptions).map(o => o.value);
+    bossEmpleados.push({ nombre, correo, cel, rol, usuario, img, servicios });
+    form.reset();
+    imgPreview.src = '';
+    renderBossEmpleados();
+  });
+  imgInput.addEventListener('change', e => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = ev => { imgPreview.src = ev.target.result; };
+    reader.readAsDataURL(file);
+  });
+  renderBossEmpleados();
+}
+function renderBossEmpleados() {
+  const list = document.getElementById('boss-empleado-list');
+  if (!list) return;
+  list.innerHTML = bossEmpleados.length === 0 ? '<p style="color:#aaa;text-align:center;margin:32px 0;">No hay empleados aún.</p>' : '';
+  bossEmpleados.forEach((emp, i) => {
+    const card = document.createElement('div');
+    card.className = 'admin-product-card';
+    card.innerHTML = `
+      <div class="admin-product-img">${emp.img ? `<img src="${emp.img}" alt="">` : '<div class="img-placeholder">🖼️</div>'}</div>
+      <div class="admin-product-info">
+        <div class="admin-product-cat">${emp.rol}</div>
+        <div class="admin-product-name">${emp.nombre}</div>
+        <div class="admin-product-desc">Correo: ${emp.correo}<br>Celular: ${emp.cel}<br>Usuario: ${emp.usuario || '-'}</div>
+        <div class="admin-product-desc">Servicios: ${emp.servicios && emp.servicios.length ? emp.servicios.join(', ') : '-'}</div>
+      </div>
+    `;
+    list.appendChild(card);
+  });
+}
+// ===== JEFE: PRODUCTOS (VISUAL) =====
+let bossProductos = [];
+function setupBossProductos() {
+  const form = document.getElementById('boss-add-producto-form');
+  const list = document.getElementById('boss-producto-list');
+  const imgInput = document.getElementById('boss-prod-image-input');
+  const imgPreview = document.getElementById('boss-prod-image-preview');
+  if (!form || !list) return;
+  form.addEventListener('submit', e => {
+    e.preventDefault();
+    const cat = document.getElementById('boss-prod-category').value;
+    const name = document.getElementById('boss-prod-name').value.trim();
+    const desc = document.getElementById('boss-prod-desc').value.trim();
+    const img = imgPreview.src && imgPreview.src.startsWith('data:') ? imgPreview.src : '';
+    bossProductos.push({ cat, name, desc, img });
+    form.reset();
+    imgPreview.src = '';
+    renderBossProductos();
+  });
+  imgInput.addEventListener('change', e => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = ev => { imgPreview.src = ev.target.result; };
+    reader.readAsDataURL(file);
+  });
+  renderBossProductos();
+}
+function renderBossProductos() {
+  const list = document.getElementById('boss-producto-list');
+  if (!list) return;
+  list.innerHTML = bossProductos.length === 0 ? '<p style="color:#aaa;text-align:center;margin:32px 0;">No hay productos aún.</p>' : '';
+  bossProductos.forEach((prod, i) => {
+    const card = document.createElement('div');
+    card.className = 'admin-product-card';
+    card.innerHTML = `
+      <div class="admin-product-img">${prod.img ? `<img src="${prod.img}" alt="">` : '<div class="img-placeholder">🖼️</div>'}</div>
+      <div class="admin-product-info">
+        <div class="admin-product-cat">${prod.cat}</div>
+        <div class="admin-product-name">${prod.name}</div>
+        <div class="admin-product-desc">${prod.desc}</div>
+      </div>
+    `;
+    list.appendChild(card);
+  });
+}
+// ===== USUARIOS =====
 const USERS = [
   { username: 'admin',   password: 'admin123', role: 'admin' },
   { username: 'usuario', password: 'user123',  role: 'user'  },
+  { username: 'jefe',    password: 'jefe123',  role: 'boss'  }, // usuario madre
 ];
 
 // ===== PRODUCTOS POR DEFECTO =====
@@ -70,14 +176,62 @@ function setupLoginForm() {
     if (user) {
       err.style.display = 'none';
       currentUser = user;
-      if (user.role === 'admin') { loadAdminScreen(); showScreen('admin-screen'); }
-      else                       { loadUserScreen();  showScreen('user-screen');  }
+      if (user.role === 'boss') {
+        setupBossMenu();
+        showScreen('boss-screen');
+      } else if (user.role === 'admin') {
+        loadAdminScreen(); showScreen('admin-screen');
+      } else {
+        loadUserScreen();  showScreen('user-screen');
+      }
     } else {
       err.style.display = 'block';
       err.textContent = 'Usuario o contrasena incorrectos.';
       document.getElementById('login-password').value = '';
     }
   });
+}
+
+// ===== JEFE: MENÚ Y SECCIONES =====
+function setupBossMenu() {
+  // Solo inicializar una vez
+  if (window._bossMenuReady) return;
+  window._bossMenuReady = true;
+  const menuBtns = document.querySelectorAll('.boss-menu-btn');
+  const sections = document.querySelectorAll('.boss-section');
+  menuBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      menuBtns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const section = btn.getAttribute('data-section');
+      sections.forEach(sec => sec.classList.add('hidden'));
+      document.getElementById('boss-' + section).classList.remove('hidden');
+      if (section === 'servicios') renderBossServicios();
+      if (section === 'productos') setupBossProductos();
+      if (section === 'empleados') setupBossEmpleados();
+    });
+  });
+  // Por defecto mostrar servicios
+  menuBtns[0].classList.add('active');
+  sections.forEach((sec, i) => sec.classList.toggle('hidden', i !== 0));
+  renderBossServicios();
+}
+
+// Renderizar panel de servicios en la sección del jefe (reutiliza el admin)
+function renderBossServicios() {
+  const bossServicios = document.getElementById('boss-servicios-content');
+  const adminPanel = document.getElementById('panel-add');
+  const adminList = document.getElementById('panel-list');
+  if (!bossServicios || !adminPanel || !adminList) return;
+  // Clonar los paneles admin y mostrarlos aquí
+  bossServicios.innerHTML = '';
+  const addClone = adminPanel.cloneNode(true);
+  const listClone = adminList.cloneNode(true);
+  addClone.classList.add('boss-admin-panel');
+  listClone.classList.add('boss-admin-panel');
+  bossServicios.appendChild(addClone);
+  bossServicios.appendChild(listClone);
+  // Opcional: podrías ocultar los paneles originales si quieres evitar duplicidad visual
 }
 
 function logout() {

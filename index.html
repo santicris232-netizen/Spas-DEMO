@@ -1,3 +1,126 @@
+  <!-- ===== PANTALLA JEFE ===== -->
+  <div id="boss-screen" class="screen">
+    <div class="topbar">
+      <div class="topbar-brand">
+        <div class="brand-icon">🌸</div>
+        <span class="brand-name">MAISON LASH</span>
+      </div>
+      <div class="topbar-actions">
+        <span class="topbar-role" id="boss-role-badge">Jefe</span>
+        <button class="btn-icon" title="Cerrar sesión" onclick="logout()">⏻</button>
+      </div>
+    </div>
+    <nav class="boss-menu">
+      <button class="boss-menu-btn" data-section="servicios">Servicios</button>
+      <button class="boss-menu-btn" data-section="productos">Productos</button>
+      <button class="boss-menu-btn" data-section="empleados">Empleados</button>
+      <button class="boss-menu-btn" data-section="calendario">Calendario</button>
+      <button class="boss-menu-btn" data-section="modificaciones">Modificaciones</button>
+      <button class="boss-menu-btn" data-section="archivos">Archivos</button>
+    </nav>
+    <div class="boss-content">
+      <section id="boss-servicios" class="boss-section"> <!-- Servicios -->
+        <h2>Servicios</h2>
+        <div id="boss-servicios-content"></div>
+      </section>
+      <section id="boss-productos" class="boss-section hidden"> <!-- Productos -->
+        <h2>Productos</h2>
+        <div id="boss-productos-content">
+          <div class="form-card">
+            <h3>Nuevo Producto</h3>
+            <form id="boss-add-producto-form" autocomplete="off">
+              <div class="field-group">
+                <label for="boss-prod-category">Categoría</label>
+                <select id="boss-prod-category">
+                  <option value="pestanas">👁 Pestañas</option>
+                  <option value="cejas">🌿 Cejas</option>
+                  <option value="labios">💋 Labios</option>
+                </select>
+              </div>
+              <div class="field-group">
+                <label for="boss-prod-name">Nombre del producto</label>
+                <input type="text" id="boss-prod-name" placeholder="Ej: Shampoo de Cejas" required>
+              </div>
+              <div class="field-group">
+                <label for="boss-prod-desc">Descripción</label>
+                <textarea id="boss-prod-desc" placeholder="Describe el producto..." required></textarea>
+              </div>
+              <div class="field-group">
+                <label>Imagen</label>
+                <div class="image-upload-area">
+                  <input type="file" id="boss-prod-image-input" accept="image/*">
+                  <div class="upload-icon">🖼️</div>
+                  <p>Toca para seleccionar una imagen</p>
+                  <p class="upload-hint">JPG, PNG, WEBP — máx 5MB</p>
+                </div>
+                <img id="boss-prod-image-preview" class="image-preview" alt="Vista previa">
+              </div>
+              <button type="submit" class="btn-primary">Guardar Producto</button>
+            </form>
+          </div>
+          <div id="boss-producto-list" class="admin-product-list"></div>
+        </div>
+      </section>
+      <section id="boss-empleados" class="boss-section hidden"> <!-- Empleados -->
+        <h2>Empleados</h2>
+        <div id="boss-empleados-content">
+          <div class="form-card">
+            <h3>Nuevo Empleado</h3>
+            <form id="boss-add-empleado-form" autocomplete="off">
+              <div class="field-group">
+                <label for="boss-emp-nombre">Nombre</label>
+                <input type="text" id="boss-emp-nombre" placeholder="Nombre completo" required>
+              </div>
+              <div class="field-group">
+                <label for="boss-emp-correo">Correo</label>
+                <input type="email" id="boss-emp-correo" placeholder="correo@ejemplo.com" required>
+              </div>
+              <div class="field-group">
+                <label for="boss-emp-cel">Celular</label>
+                <input type="tel" id="boss-emp-cel" placeholder="Ej: 3001234567" required>
+              </div>
+              <div class="field-group">
+                <label for="boss-emp-rol">Cargo/Rol</label>
+                <input type="text" id="boss-emp-rol" placeholder="Ej: Especialista, Recepcionista" required>
+              </div>
+              <div class="field-group">
+                <label>Imagen</label>
+                <div class="image-upload-area">
+                  <input type="file" id="boss-emp-image-input" accept="image/*">
+                  <div class="upload-icon">🖼️</div>
+                  <p>Toca para seleccionar una imagen</p>
+                  <p class="upload-hint">JPG, PNG, WEBP — máx 5MB</p>
+                </div>
+                <img id="boss-emp-image-preview" class="image-preview" alt="Vista previa">
+              </div>
+              <div class="field-group">
+                <label for="boss-emp-servicios">Servicios asignados</label>
+                <select id="boss-emp-servicios" multiple style="min-height:60px;"></select>
+              </div>
+              <div class="field-group">
+                <label for="boss-emp-usuario">Usuario asignado (opcional)</label>
+                <input type="text" id="boss-emp-usuario" placeholder="Usuario del sistema">
+              </div>
+              <button type="submit" class="btn-primary">Guardar Empleado</button>
+            </form>
+          </div>
+          <div id="boss-empleado-list" class="admin-product-list"></div>
+        </div>
+      </section>
+      <section id="boss-calendario" class="boss-section hidden"> <!-- Calendario -->
+        <h2>Calendario</h2>
+        <div id="boss-calendario-content"></div>
+      </section>
+      <section id="boss-modificaciones" class="boss-section hidden"> <!-- Modificaciones -->
+        <h2>Modificaciones</h2>
+        <div id="boss-modificaciones-content"></div>
+      </section>
+      <section id="boss-archivos" class="boss-section hidden"> <!-- Archivos -->
+        <h2>Archivos</h2>
+        <div id="boss-archivos-content"></div>
+      </section>
+    </div>
+  </div>
 <!DOCTYPE html>
 <html lang="es">
 <head>
