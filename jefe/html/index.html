@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="theme-color" content="#071a1a">
+  <title>Maison Lash - Jefe</title>
+  <link rel="stylesheet" href="../../compartido/css/base.css">
+  <link rel="stylesheet" href="../css/jefe.css">
+</head>
+<body>
+  <main class="mobile-shell">
+    <header class="app-header">
+      <div class="brand-block">
+        <p class="brand-kicker">Jefe</p>
+        <h1 class="brand-name">MAISON LASH</h1>
+      </div>
+      <div class="header-actions">
+        <span class="role-pill">Control</span>
+        <button class="icon-button" id="logout-button" type="button" aria-label="Cerrar sesion">Salir</button>
+      </div>
+    </header>
+
+    <nav class="segment-scroll" aria-label="Menu de jefe">
+      <button class="segment-button active" type="button" data-view="services-view">Servicios</button>
+      <button class="segment-button" type="button" data-view="products-view">Productos</button>
+      <button class="segment-button" type="button" data-view="employees-view">Empleados</button>
+      <button class="segment-button" type="button" data-view="calendar-view">Calendario</button>
+      <button class="segment-button" type="button" data-view="settings-view">Config</button>
+      <button class="segment-button" type="button" data-view="exports-view">Archivos</button>
+    </nav>
+
+    <section class="mobile-content boss-content">
+      <div id="services-view" class="view active">
+        <p class="section-kicker">Gestion</p>
+        <h2 class="section-title">Servicios</h2>
+        <form class="form-card" id="service-form" autocomplete="off">
+          <h3 class="form-title" id="service-form-title">Nuevo servicio</h3>
+          <input type="hidden" id="service-id">
+          <div class="field-group"><label for="service-category">Categoria</label><select id="service-category"><option value="pestanas">Pestanas</option><option value="cejas">Cejas</option><option value="labios">Labios</option></select></div>
+          <div class="field-group"><label for="service-name">Nombre</label><input type="text" id="service-name" required></div>
+          <div class="field-group"><label for="service-description">Descripcion</label><textarea id="service-description" required></textarea></div>
+          <div class="field-group"><label for="service-price">Precio</label><input type="text" id="service-price" required></div>
+          <div class="field-group"><label for="service-image">Imagen</label><div class="file-field"><input type="file" id="service-image" accept="image/*"><img class="image-preview hidden" id="service-preview" alt="Vista previa servicio"></div></div>
+          <button class="primary-button" type="submit">Guardar servicio</button>
+          <button class="secondary-button" type="button" id="clear-service-form">Limpiar</button>
+        </form>
+        <div class="stack-list boss-list" id="services-list"></div>
+      </div>
+
+      <div id="products-view" class="view">
+        <p class="section-kicker">Catalogo</p>
+        <h2 class="section-title">Productos</h2>
+        <form class="form-card" id="product-form" autocomplete="off">
+          <h3 class="form-title" id="product-form-title">Nuevo producto</h3>
+          <input type="hidden" id="product-id">
+          <div class="field-group"><label for="product-category">Categoria</label><select id="product-category"><option value="pestanas">Pestanas</option><option value="cejas">Cejas</option><option value="labios">Labios</option></select></div>
+          <div class="field-group"><label for="product-name">Nombre</label><input type="text" id="product-name" required></div>
+          <div class="field-group"><label for="product-description">Descripcion</label><textarea id="product-description" required></textarea></div>
+          <div class="field-group"><label for="product-price">Precio</label><input type="text" id="product-price" required></div>
+          <div class="field-group"><label for="product-image">Imagen</label><div class="file-field"><input type="file" id="product-image" accept="image/*"><img class="image-preview hidden" id="product-preview" alt="Vista previa producto"></div></div>
+          <button class="primary-button" type="submit">Guardar producto</button>
+          <button class="secondary-button" type="button" id="clear-product-form">Limpiar</button>
+        </form>
+        <div class="stack-list boss-list" id="products-list"></div>
+      </div>
+
+      <div id="employees-view" class="view">
+        <p class="section-kicker">Equipo</p>
+        <h2 class="section-title">Empleados</h2>
+        <form class="form-card" id="employee-form" autocomplete="off">
+          <h3 class="form-title" id="employee-form-title">Nuevo empleado</h3>
+          <input type="hidden" id="employee-id">
+          <div class="field-group"><label for="employee-name">Nombre</label><input type="text" id="employee-name" required></div>
+          <div class="field-group"><label for="employee-email">Correo</label><input type="email" id="employee-email" required></div>
+          <div class="field-group"><label for="employee-phone">Celular</label><input type="tel" id="employee-phone" required></div>
+          <div class="field-group"><label for="employee-role">Cargo</label><input type="text" id="employee-role" required></div>
+          <div class="field-group"><label for="employee-services">Servicios</label><select id="employee-services" multiple required></select></div>
+          <div class="field-group"><label for="employee-user">Usuario</label><input type="text" id="employee-user" required></div>
+          <div class="field-group"><label for="employee-password">Contrasena</label><input type="text" id="employee-password" required></div>
+          <div class="field-group"><label for="employee-image">Imagen</label><div class="file-field"><input type="file" id="employee-image" accept="image/*"><img class="image-preview hidden" id="employee-preview" alt="Vista previa empleado"></div></div>
+          <button class="primary-button" type="submit">Guardar empleado</button>
+          <button class="secondary-button" type="button" id="clear-employee-form">Limpiar</button>
+        </form>
+        <div class="stack-list boss-list" id="employees-list"></div>
+      </div>
+
+      <div id="calendar-view" class="view">
+        <p class="section-kicker">Agenda</p>
+        <h2 class="section-title">Calendario</h2>
+        <form class="form-card" id="appointment-form" autocomplete="off">
+          <h3 class="form-title" id="appointment-form-title">Nueva cita</h3>
+          <input type="hidden" id="appointment-id">
+          <div class="field-group"><label for="appointment-client-name">Cliente</label><input type="text" id="appointment-client-name" required></div>
+          <div class="field-group"><label for="appointment-client-email">Correo</label><input type="email" id="appointment-client-email" required></div>
+          <div class="field-group"><label for="appointment-client-phone">Celular</label><input type="tel" id="appointment-client-phone" required></div>
+          <div class="field-group"><label for="appointment-services">Servicios</label><select id="appointment-services" multiple required></select></div>
+          <div class="field-group"><label for="appointment-employee">Especialista</label><select id="appointment-employee" required></select></div>
+          <div class="field-row"><div class="field-group"><label for="appointment-date">Fecha</label><input type="date" id="appointment-date" required></div><div class="field-group"><label for="appointment-time">Hora</label><input type="time" id="appointment-time" required></div></div>
+          <div class="field-group"><label for="appointment-status">Estado</label><select id="appointment-status"><option value="pendiente">Pendiente</option><option value="confirmada">Confirmada</option><option value="completada">Completada</option><option value="cancelada">Cancelada</option></select></div>
+          <div class="field-group"><label for="appointment-notes">Notas</label><textarea id="appointment-notes"></textarea></div>
+          <button class="primary-button" type="submit">Guardar cita</button>
+          <button class="secondary-button" type="button" id="clear-appointment-form">Limpiar</button>
+        </form>
+        <div class="stack-list boss-list" id="appointments-list"></div>
+      </div>
+
+      <div id="settings-view" class="view">
+        <p class="section-kicker">Conexion</p>
+        <h2 class="section-title">Configuracion</h2>
+        <form class="form-card" id="settings-form" autocomplete="off">
+          <div class="field-group"><label for="setting-whatsapp">WhatsApp</label><input type="tel" id="setting-whatsapp" placeholder="3001234567"></div>
+          <div class="toggle-field"><label><input type="checkbox" id="setting-instagram-enabled"> Instagram</label><input type="text" id="setting-instagram" placeholder="URL o usuario"></div>
+          <div class="toggle-field"><label><input type="checkbox" id="setting-facebook-enabled"> Facebook</label><input type="text" id="setting-facebook" placeholder="URL o usuario"></div>
+          <div class="toggle-field"><label><input type="checkbox" id="setting-tiktok-enabled"> TikTok</label><input type="text" id="setting-tiktok" placeholder="URL o usuario"></div>
+          <button class="primary-button" type="submit">Guardar configuracion</button>
+        </form>
+      </div>
+
+      <div id="exports-view" class="view">
+        <p class="section-kicker">Archivos</p>
+        <h2 class="section-title">Exportar</h2>
+        <div class="export-grid">
+          <button class="export-card" type="button" id="export-clients"><strong>Clientes</strong><span>Datos de registro</span></button>
+          <button class="export-card" type="button" id="export-attended"><strong>Atendidos</strong><span>Citas completadas</span></button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script src="../../compartido/js/data-store.js"></script>
+  <script src="../../compartido/js/auth.js"></script>
+  <script src="../../compartido/js/ui.js"></script>
+  <script src="../js/jefe.js"></script>
+</body>
+</html>

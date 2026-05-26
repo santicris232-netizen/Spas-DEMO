@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="theme-color" content="#071a1a">
+  <title>Maison Lash - Empleado</title>
+  <link rel="stylesheet" href="../../compartido/css/base.css">
+  <link rel="stylesheet" href="../css/empleado.css">
+</head>
+<body>
+  <main class="mobile-shell">
+    <header class="app-header">
+      <div class="brand-block">
+        <p class="brand-kicker">Empleado</p>
+        <h1 class="brand-name">MAISON LASH</h1>
+      </div>
+      <div class="header-actions">
+        <span class="role-pill" id="employee-name-pill">Agenda</span>
+        <button class="icon-button" id="logout-button" type="button" aria-label="Cerrar sesion">Salir</button>
+      </div>
+    </header>
+
+    <section class="employee-hero">
+      <p class="section-kicker">Calendario</p>
+      <h2 class="section-title" id="employee-title">Mis citas</h2>
+      <div class="employee-summary" id="employee-summary"></div>
+    </section>
+
+    <section class="employee-filters">
+      <div class="field-group">
+        <label for="filter-date">Fecha</label>
+        <input type="date" id="filter-date">
+      </div>
+      <div class="field-group">
+        <label for="filter-status">Estado</label>
+        <select id="filter-status">
+          <option value="all">Todos</option>
+          <option value="pendiente">Pendiente</option>
+          <option value="confirmada">Confirmada</option>
+          <option value="completada">Completada</option>
+          <option value="cancelada">Cancelada</option>
+        </select>
+      </div>
+    </section>
+
+    <section class="mobile-content employee-content">
+      <div class="stack-list" id="employee-appointments-list"></div>
+    </section>
+  </main>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script src="../../compartido/js/data-store.js"></script>
+  <script src="../../compartido/js/auth.js"></script>
+  <script src="../../compartido/js/ui.js"></script>
+  <script src="../js/empleado.js"></script>
+</body>
+</html>

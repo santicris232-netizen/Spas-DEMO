@@ -1,0 +1,119 @@
+/* Estilos especificos del panel movil del jefe. */
+.boss-content {
+  display: grid;
+  gap: 14px;
+}
+
+.boss-list {
+  margin-top: 14px;
+}
+
+.management-card {
+  padding: 12px;
+}
+
+.management-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.management-title {
+  margin: 0 0 6px;
+  font-family: var(--font-title);
+  font-size: 1.18rem;
+  line-height: 1.12;
+}
+
+.management-subtitle {
+  margin: 0;
+  color: var(--text-soft);
+  font-size: 0.84rem;
+}
+
+.management-price {
+  color: var(--gold);
+  font-weight: 900;
+  white-space: nowrap;
+}
+
+.toggle-field {
+  display: grid;
+  gap: 8px;
+  padding: 10px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: rgba(23, 80, 80, 0.05);
+}
+
+.toggle-field label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-soft);
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.toggle-field input[type='checkbox'] {
+  width: auto;
+  min-height: auto;
+}
+
+.export-grid {
+  display: grid;
+  gap: 12px;
+}
+
+.export-card {
+  display: grid;
+  gap: 4px;
+  width: 100%;
+  min-height: 84px;
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface-soft);
+  color: var(--text);
+  text-align: left;
+  box-shadow: 0 8px 24px rgba(12, 36, 36, 0.06);
+}
+
+.export-card strong {
+  font-family: var(--font-title);
+  font-size: 1.2rem;
+}
+
+.export-card span {
+  color: var(--text-soft);
+}
+
+.appointment-actions,
+.management-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.appointment-actions .secondary-button,
+.appointment-actions .danger-button,
+.management-actions .secondary-button,
+.management-actions .danger-button {
+  min-height: 38px;
+  font-size: 0.7rem;
+}
+
+@media (max-width: 360px) {
+  .management-top {
+    display: grid;
+  }
+
+  .appointment-actions,
+  .management-actions {
+    grid-template-columns: 1fr;
+  }
+}

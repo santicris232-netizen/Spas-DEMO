@@ -1,319 +1,63 @@
-  <!-- ===== PANTALLA JEFE ===== -->
-  <div id="boss-screen" class="screen">
-    <div class="topbar">
-      <div class="topbar-brand">
-        <div class="brand-icon">🌸</div>
-        <span class="brand-name">MAISON LASH</span>
-      </div>
-      <div class="topbar-actions">
-        <span class="topbar-role" id="boss-role-badge">Jefe</span>
-        <button class="btn-icon" title="Cerrar sesión" onclick="logout()">⏻</button>
-      </div>
-    </div>
-    <nav class="boss-menu">
-      <button class="boss-menu-btn" data-section="servicios">Servicios</button>
-      <button class="boss-menu-btn" data-section="productos">Productos</button>
-      <button class="boss-menu-btn" data-section="empleados">Empleados</button>
-      <button class="boss-menu-btn" data-section="calendario">Calendario</button>
-      <button class="boss-menu-btn" data-section="modificaciones">Modificaciones</button>
-      <button class="boss-menu-btn" data-section="archivos">Archivos</button>
-    </nav>
-    <div class="boss-content">
-      <section id="boss-servicios" class="boss-section"> <!-- Servicios -->
-        <h2>Servicios</h2>
-        <div id="boss-servicios-content"></div>
-      </section>
-      <section id="boss-productos" class="boss-section hidden"> <!-- Productos -->
-        <h2>Productos</h2>
-        <div id="boss-productos-content">
-          <div class="form-card">
-            <h3>Nuevo Producto</h3>
-            <form id="boss-add-producto-form" autocomplete="off">
-              <div class="field-group">
-                <label for="boss-prod-category">Categoría</label>
-                <select id="boss-prod-category">
-                  <option value="pestanas">👁 Pestañas</option>
-                  <option value="cejas">🌿 Cejas</option>
-                  <option value="labios">💋 Labios</option>
-                </select>
-              </div>
-              <div class="field-group">
-                <label for="boss-prod-name">Nombre del producto</label>
-                <input type="text" id="boss-prod-name" placeholder="Ej: Shampoo de Cejas" required>
-              </div>
-              <div class="field-group">
-                <label for="boss-prod-desc">Descripción</label>
-                <textarea id="boss-prod-desc" placeholder="Describe el producto..." required></textarea>
-              </div>
-              <div class="field-group">
-                <label>Imagen</label>
-                <div class="image-upload-area">
-                  <input type="file" id="boss-prod-image-input" accept="image/*">
-                  <div class="upload-icon">🖼️</div>
-                  <p>Toca para seleccionar una imagen</p>
-                  <p class="upload-hint">JPG, PNG, WEBP — máx 5MB</p>
-                </div>
-                <img id="boss-prod-image-preview" class="image-preview" alt="Vista previa">
-              </div>
-              <button type="submit" class="btn-primary">Guardar Producto</button>
-            </form>
-          </div>
-          <div id="boss-producto-list" class="admin-product-list"></div>
-        </div>
-      </section>
-      <section id="boss-empleados" class="boss-section hidden"> <!-- Empleados -->
-        <h2>Empleados</h2>
-        <div id="boss-empleados-content">
-          <div class="form-card">
-            <h3>Nuevo Empleado</h3>
-            <form id="boss-add-empleado-form" autocomplete="off">
-              <div class="field-group">
-                <label for="boss-emp-nombre">Nombre</label>
-                <input type="text" id="boss-emp-nombre" placeholder="Nombre completo" required>
-              </div>
-              <div class="field-group">
-                <label for="boss-emp-correo">Correo</label>
-                <input type="email" id="boss-emp-correo" placeholder="correo@ejemplo.com" required>
-              </div>
-              <div class="field-group">
-                <label for="boss-emp-cel">Celular</label>
-                <input type="tel" id="boss-emp-cel" placeholder="Ej: 3001234567" required>
-              </div>
-              <div class="field-group">
-                <label for="boss-emp-rol">Cargo/Rol</label>
-                <input type="text" id="boss-emp-rol" placeholder="Ej: Especialista, Recepcionista" required>
-              </div>
-              <div class="field-group">
-                <label>Imagen</label>
-                <div class="image-upload-area">
-                  <input type="file" id="boss-emp-image-input" accept="image/*">
-                  <div class="upload-icon">🖼️</div>
-                  <p>Toca para seleccionar una imagen</p>
-                  <p class="upload-hint">JPG, PNG, WEBP — máx 5MB</p>
-                </div>
-                <img id="boss-emp-image-preview" class="image-preview" alt="Vista previa">
-              </div>
-              <div class="field-group">
-                <label for="boss-emp-servicios">Servicios asignados</label>
-                <select id="boss-emp-servicios" multiple style="min-height:60px;"></select>
-              </div>
-              <div class="field-group">
-                <label for="boss-emp-usuario">Usuario asignado (opcional)</label>
-                <input type="text" id="boss-emp-usuario" placeholder="Usuario del sistema">
-              </div>
-              <button type="submit" class="btn-primary">Guardar Empleado</button>
-            </form>
-          </div>
-          <div id="boss-empleado-list" class="admin-product-list"></div>
-        </div>
-      </section>
-      <section id="boss-calendario" class="boss-section hidden"> <!-- Calendario -->
-        <h2>Calendario</h2>
-        <div id="boss-calendario-content"></div>
-      </section>
-      <section id="boss-modificaciones" class="boss-section hidden"> <!-- Modificaciones -->
-        <h2>Modificaciones</h2>
-        <div id="boss-modificaciones-content"></div>
-      </section>
-      <section id="boss-archivos" class="boss-section hidden"> <!-- Archivos -->
-        <h2>Archivos</h2>
-        <div id="boss-archivos-content"></div>
-      </section>
-    </div>
-  </div>
 <!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <meta name="theme-color" content="#071a1a">
-  <title>Maison Lash — Catálogo</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;1,300&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&display=swap" rel="stylesheet">
+  <title>Maison Lash - Acceso</title>
+  <link rel="stylesheet" href="compartido/css/base.css">
   <link rel="stylesheet" href="CSS/styles.css">
 </head>
 <body>
-
-  <!-- ===== LOGIN ===== -->
-  <div id="login-screen" class="screen">
-    <div class="login-card">
-      <div class="login-logo">
-        <div class="lash-icon">🌸</div>
-        <h1>MAISON LASH</h1>
-        <p class="sub">BY CAMI PORTELA</p>
+  <main class="auth-page">
+    <section class="auth-card" aria-labelledby="auth-title">
+      <div class="auth-brand">
+        <p class="brand-kicker">By Cami Portela</p>
+        <h1 class="brand-name" id="auth-title">MAISON LASH</h1>
       </div>
-      <form id="login-form" autocomplete="off">
-        <div class="form-group">
-          <label for="login-username">Usuario</label>
-          <input type="text" id="login-username" placeholder="Ingresa tu usuario" autocomplete="username" required>
+
+      <form id="login-form" class="auth-form" autocomplete="off">
+        <div class="field-group">
+          <label for="login-username">Usuario o correo</label>
+          <input type="text" id="login-username" autocomplete="username" required>
         </div>
-        <div class="form-group">
-          <label for="login-password">Contraseña</label>
-          <input type="password" id="login-password" placeholder="••••••••" autocomplete="current-password" required>
+        <div class="field-group">
+          <label for="login-password">Contrasena</label>
+          <input type="password" id="login-password" autocomplete="current-password" required>
         </div>
-        <button type="submit" class="btn-login">Ingresar</button>
-        <div class="login-error" id="login-error"></div>
+        <button class="primary-button" type="submit">Ingresar</button>
+        <button class="secondary-button" type="button" id="show-register-button">Crear cuenta</button>
+        <p class="form-error" id="login-error"></p>
       </form>
-      <div class="login-demo-hint">
-        usuario: <strong>usuario</strong> / clave: <strong>user123</strong><br>
-        admin: <strong>admin</strong> / clave: <strong>admin123</strong>
-      </div>
-    </div>
-  </div>
 
-  <!-- ===== PANTALLA USUARIO ===== -->
-  <div id="user-screen" class="screen">
-
-    <div class="topbar">
-      <div class="topbar-brand">
-        <div class="brand-icon">🌸</div>
-        <span class="brand-name">MAISON LASH</span>
-      </div>
-      <div class="topbar-actions">
-        <span class="topbar-role" id="user-role-badge">Cliente</span>
-        <button class="btn-icon" title="Cerrar sesión" onclick="logout()">⏻</button>
-      </div>
-    </div>
-
-    <!-- Pestañas de categoría -->
-    <div class="category-tabs">
-      <button class="cat-tab active" data-cat="pestanas">👁 Pestañas</button>
-      <button class="cat-tab"        data-cat="cejas">🌿 Cejas</button>
-      <button class="cat-tab"        data-cat="labios">💋 Labios</button>
-    </div>
-
-    <!-- Visor libro (una página / producto) -->
-    <div class="book-scene">
-      <div class="book-wrapper" id="book-wrapper">
-        <div class="book-card" id="book-card">
-          <!-- Renderizado por JS -->
+      <form id="register-form" class="auth-form hidden" autocomplete="off">
+        <div class="field-row">
+          <div class="field-group"><label for="register-name">Nombre</label><input type="text" id="register-name" required></div>
+          <div class="field-group"><label for="register-lastname">Apellido</label><input type="text" id="register-lastname" required></div>
         </div>
-        <div class="swipe-hint" id="swipe-hint">← desliza para explorar →</div>
-      </div>
-
-      <div class="book-nav">
-        <button class="nav-btn" id="btn-prev" onclick="navigateBook('prev')">&#8249;</button>
-        <div class="page-dots" id="page-dots"></div>
-        <button class="nav-btn" id="btn-next" onclick="navigateBook('next')">&#8250;</button>
-      </div>
-    </div>
-
-  </div>
-
-  <!-- ===== PANTALLA ADMIN ===== -->
-  <div id="admin-screen" class="screen">
-
-    <div class="topbar">
-      <div class="topbar-brand">
-        <div class="brand-icon">🌸</div>
-        <span class="brand-name">MAISON LASH</span>
-      </div>
-      <div class="topbar-actions">
-        <span class="topbar-role" id="admin-role-badge">Admin</span>
-        <button class="btn-icon" title="Cerrar sesión" onclick="logout()">⏻</button>
-      </div>
-    </div>
-
-    <div class="admin-tabs">
-      <button class="admin-tab active" data-tab="add">➕ Agregar</button>
-      <button class="admin-tab"        data-tab="list">📋 Servicios</button>
-    </div>
-
-    <!-- Panel: Agregar -->
-    <div id="panel-add" class="admin-panel active">
-      <div class="form-card">
-        <h3>Nuevo Servicio</h3>
-        <form id="add-product-form" autocomplete="off">
-          <div class="field-group">
-            <label for="add-category">Categoría</label>
-            <select id="add-category">
-              <option value="pestanas">👁 Pestañas</option>
-              <option value="cejas">🌿 Cejas</option>
-              <option value="labios">💋 Labios</option>
-            </select>
-          </div>
-          <div class="field-group">
-            <label for="add-name">Nombre del servicio</label>
-            <input type="text" id="add-name" placeholder="Ej: Extensiones Clásicas" required>
-          </div>
-          <div class="field-group">
-            <label for="add-desc">Descripción</label>
-            <textarea id="add-desc" placeholder="Describe el servicio..." required></textarea>
-          </div>
-          <div class="field-group">
-            <label for="add-price">Precio</label>
-            <input type="text" id="add-price" placeholder="Ej: $120.000" required>
-          </div>
-          <div class="field-group">
-            <label>Imagen</label>
-            <div class="image-upload-area">
-              <input type="file" id="add-image-input" accept="image/*">
-              <div class="upload-icon">🖼️</div>
-              <p>Toca para seleccionar una imagen</p>
-              <p class="upload-hint">JPG, PNG, WEBP — máx 5MB</p>
-            </div>
-            <img id="add-image-preview" class="image-preview" alt="Vista previa">
-          </div>
-          <button type="submit" class="btn-primary">Guardar Servicio</button>
-        </form>
-      </div>
-    </div>
-
-    <!-- Panel: Lista -->
-    <div id="panel-list" class="admin-panel">
-      <div id="admin-product-list" class="admin-product-list"></div>
-    </div>
-
-  </div>
-
-  <!-- ===== MODAL EDICIÓN ===== -->
-  <div id="edit-modal" class="modal-overlay">
-    <div class="modal-card">
-      <div class="modal-header">
-        <h3>Editar Servicio</h3>
-        <button class="modal-close" onclick="closeEditModal()">✕</button>
-      </div>
-      <form id="edit-product-form" autocomplete="off">
-        <div class="field-group">
-          <label for="edit-category">Categoría</label>
-          <select id="edit-category">
-            <option value="pestanas">👁 Pestañas</option>
-            <option value="cejas">🌿 Cejas</option>
-            <option value="labios">💋 Labios</option>
-          </select>
-        </div>
-        <div class="field-group">
-          <label for="edit-name">Nombre</label>
-          <input type="text" id="edit-name" required>
-        </div>
-        <div class="field-group">
-          <label for="edit-desc">Descripción</label>
-          <textarea id="edit-desc" required></textarea>
-        </div>
-        <div class="field-group">
-          <label for="edit-price">Precio</label>
-          <input type="text" id="edit-price" required>
-        </div>
-        <div class="field-group">
-          <label>Imagen</label>
-          <div class="image-upload-area">
-            <input type="file" id="edit-image-input" accept="image/*">
-            <div class="upload-icon">🖼️</div>
-            <p>Toca para cambiar la imagen</p>
-            <p class="upload-hint">Deja vacío para mantener la actual</p>
-          </div>
-          <img id="edit-image-preview" class="image-preview" alt="Vista previa">
-        </div>
-        <button type="submit" class="btn-primary">Guardar Cambios</button>
-        <button type="button" class="btn-secondary" onclick="closeEditModal()">Cancelar</button>
+        <div class="field-group"><label for="register-phone">Numero celular</label><input type="tel" id="register-phone" required></div>
+        <div class="field-group"><label for="register-email">Correo</label><input type="email" id="register-email" required></div>
+        <div class="field-group"><label for="register-password">Contrasena</label><input type="password" id="register-password" minlength="4" required></div>
+        <div class="field-group"><label for="register-birthday">Fecha cumpleanos</label><input type="date" id="register-birthday" required></div>
+        <button class="primary-button" type="submit">Registrarme</button>
+        <button class="secondary-button" type="button" id="cancel-register-button">Volver</button>
+        <p class="form-error" id="register-error"></p>
       </form>
-    </div>
-  </div>
 
-  <!-- ===== TOAST ===== -->
-  <div id="toast" class="toast"></div>
+      <div class="demo-access">
+        <p><strong>usuario</strong> / user123</p>
+        <p><strong>jefe</strong> / jefe123</p>
+        <p><strong>empleado</strong> / empleado123</p>
+        <p><strong>admin</strong> / admin123</p>
+      </div>
+    </section>
+  </main>
 
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script src="compartido/js/data-store.js"></script>
+  <script src="compartido/js/auth.js"></script>
+  <script src="compartido/js/ui.js"></script>
   <script src="JavaScript/app.js"></script>
 </body>
 </html>
