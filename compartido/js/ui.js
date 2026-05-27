@@ -119,7 +119,7 @@
   }
 
   /**
-   * Convierte una imagen seleccionada a base64.
+   * Convierte una imagen seleccionada a base64, comprimiendola si es necesario.
    * @param {HTMLInputElement} input Campo file.
    * @returns {Promise<string>} Imagen en data URL.
    */
@@ -137,13 +137,39 @@
         return;
       }
 
-      if (file.size > 5 * 1024 * 1024) {
-        reject(new Error('La imagen no puede superar 5MB.'));
-        return;
-      }
-
       const reader = new FileReader();
-      reader.onload = () => resolve(String(reader.result || ''));
+      reader.onload = (e) => {
+        const img = new Image();
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          const max_size = 800;
+          let width = img.width;
+          let height = img.height;
+
+          if (width > height) {
+            if (width > max_size) {
+              height *= max_size / width;
+              width = max_size;
+            }
+          } else {
+            if (height > max_size) {
+              width *= max_size / height;
+              height = max_size;
+            }
+          }
+
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, width, height);
+
+          // Comprimir en WebP a 70% de calidad
+          const dataUrl = canvas.toDataURL('image/webp', 0.7);
+          resolve(dataUrl);
+        };
+        img.onerror = () => reject(new Error('No se pudo procesar la imagen.'));
+        img.src = String(e.target.result || '');
+      };
       reader.onerror = () => reject(new Error('No se pudo leer la imagen.'));
       reader.readAsDataURL(file);
     });
