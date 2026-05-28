@@ -137,6 +137,11 @@
         return;
       }
 
+      if (file.size > 8 * 1024 * 1024) {
+        reject(new Error('La imagen no puede superar 8MB.'));
+        return;
+      }
+
       const reader = new FileReader();
       reader.onload = (e) => {
         const img = new Image();
