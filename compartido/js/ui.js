@@ -179,6 +179,39 @@
     URL.revokeObjectURL(url);
   }
 
+  /**
+   * Formatea un valor numerico como pesos colombianos (ej: $80.000).
+   * @param {unknown} value Valor a formatear.
+   * @returns {string} Texto formateado.
+   */
+  function formatCurrency(value) {
+    const clean = String(value || '').replace(/\D/g, '');
+    if (!clean) {
+      return '';
+    }
+    return '$' + clean.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+  }
+
+  /**
+   * Vincula una mascara de pesos en tiempo real a un input de texto.
+   * @param {string} inputId Id del input.
+   */
+  function bindPriceFormatter(inputId) {
+    const input = document.getElementById(inputId);
+    if (!input) {
+      return;
+    }
+    input.addEventListener('input', event => {
+      const val = event.target.value;
+      const cursor = event.target.selectionStart;
+      const origLen = val.length;
+      const formatted = formatCurrency(val);
+      event.target.value = formatted;
+      const diff = formatted.length - origLen;
+      event.target.setSelectionRange(cursor + diff, cursor + diff);
+    });
+  }
+
   window.MaisonUi = {
     escapeHTML,
     escapeAttr,
@@ -189,6 +222,8 @@
     appointmentClass,
     readImageInput,
     visualImage,
-    downloadCsv
+    downloadCsv,
+    formatCurrency,
+    bindPriceFormatter
   };
 })();

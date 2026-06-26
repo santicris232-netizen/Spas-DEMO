@@ -117,3 +117,20 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* Filtros de la agenda del jefe */
+.calendar-filters {
+  margin-top: 14px;
+}
+
+.filter-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+@media (max-width: 360px) {
+  .filter-row {
+    grid-template-columns: 1fr;
+  }
+}

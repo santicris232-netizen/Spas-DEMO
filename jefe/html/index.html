@@ -102,6 +102,40 @@
           <button class="primary-button" type="submit">Guardar cita</button>
           <button class="secondary-button" type="button" id="clear-appointment-form">Limpiar</button>
         </form>
+
+        <section class="calendar-filters form-card">
+          <h3 class="form-title" style="font-size: 1.15rem; color: var(--teal);">Filtrar y Buscar Citas</h3>
+          <div class="field-group">
+            <label for="boss-filter-search">Buscar cliente</label>
+            <input type="text" id="boss-filter-search" placeholder="Buscar por nombre, correo o celular...">
+          </div>
+          <div class="filter-row">
+            <div class="field-group">
+              <label for="boss-filter-date">Fecha</label>
+              <input type="date" id="boss-filter-date">
+            </div>
+            <div class="field-group">
+              <label for="boss-filter-status">Estado</label>
+              <select id="boss-filter-status">
+                <option value="all">Todos</option>
+                <option value="pendiente">Pendiente</option>
+                <option value="confirmada">Confirmada</option>
+                <option value="completada">Completada</option>
+                <option value="cancelada">Cancelada</option>
+              </select>
+            </div>
+          </div>
+          <div class="filter-row">
+            <div class="field-group">
+              <label for="boss-filter-employee">Especialista</label>
+              <select id="boss-filter-employee"></select>
+            </div>
+            <div class="field-group" style="justify-content: flex-end;">
+              <button class="secondary-button" type="button" id="clear-boss-filters" style="min-height: 44px;">Limpiar Filtros</button>
+            </div>
+          </div>
+        </section>
+
         <div class="stack-list boss-list" id="appointments-list"></div>
       </div>
 

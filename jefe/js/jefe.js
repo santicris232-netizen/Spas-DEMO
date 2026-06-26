@@ -27,6 +27,8 @@
     bindNavigation();
     bindForms();
     bindImageInputs();
+    window.MaisonUi.bindPriceFormatter('service-price');
+    window.MaisonUi.bindPriceFormatter('product-price');
     renderAll();
   }
 
@@ -61,6 +63,13 @@
     document.getElementById('products-list').addEventListener('click', handleProductsList);
     document.getElementById('employees-list').addEventListener('click', handleEmployeesList);
     document.getElementById('appointments-list').addEventListener('click', handleAppointmentsList);
+
+    // Filtros de agenda del jefe
+    document.getElementById('boss-filter-search').addEventListener('input', renderAppointments);
+    document.getElementById('boss-filter-date').addEventListener('change', renderAppointments);
+    document.getElementById('boss-filter-status').addEventListener('change', renderAppointments);
+    document.getElementById('boss-filter-employee').addEventListener('change', renderAppointments);
+    document.getElementById('clear-boss-filters').addEventListener('click', clearBossFilters);
   }
 
   /** Configura carga de imagenes por entidad. */
@@ -96,6 +105,7 @@
     renderServices();
     renderProducts();
     renderEmployees();
+    fillBossFilterEmployees();
     renderAppointments();
     fillSettingsForm();
   }
@@ -204,13 +214,41 @@
     `).join('');
   }
 
-  /** Renderiza la agenda global. */
+  /** Renderiza la agenda global con filtros de busqueda. */
   function renderAppointments() {
     const container = document.getElementById('appointments-list');
-    const appointments = [...state.appointments].sort((first, second) => `${first.date} ${first.time}`.localeCompare(`${second.date} ${second.time}`));
+    
+    const query = (document.getElementById('boss-filter-search')?.value || '').trim().toLowerCase();
+    const filterDate = document.getElementById('boss-filter-date')?.value || '';
+    const filterStatus = document.getElementById('boss-filter-status')?.value || 'all';
+    const filterEmployee = document.getElementById('boss-filter-employee')?.value || 'all';
+
+    let appointments = [...state.appointments];
+
+    if (query) {
+      appointments = appointments.filter(apt => 
+        apt.clientName.toLowerCase().includes(query) ||
+        apt.clientEmail.toLowerCase().includes(query) ||
+        apt.clientPhone.includes(query)
+      );
+    }
+
+    if (filterDate) {
+      appointments = appointments.filter(apt => apt.date === filterDate);
+    }
+
+    if (filterStatus !== 'all') {
+      appointments = appointments.filter(apt => apt.status === filterStatus);
+    }
+
+    if (filterEmployee !== 'all') {
+      appointments = appointments.filter(apt => String(apt.employeeId) === filterEmployee);
+    }
+
+    appointments.sort((first, second) => `${first.date} ${first.time}`.localeCompare(`${second.date} ${second.time}`));
 
     if (!appointments.length) {
-      container.innerHTML = '<div class="empty-state">No hay citas registradas.</div>';
+      container.innerHTML = '<div class="empty-state">No hay citas para este filtro.</div>';
       return;
     }
 
@@ -650,6 +688,33 @@
     Array.from(document.getElementById(selectId).options).forEach(option => {
       option.selected = normalizedValues.includes(String(option.value));
     });
+  }
+
+  /** Llena el selector de empleados del filtro del jefe. */
+  function fillBossFilterEmployees() {
+    const select = document.getElementById('boss-filter-employee');
+    if (!select) {
+      return;
+    }
+    const currentVal = select.value || 'all';
+    select.innerHTML = '<option value="all">Todos los especialistas</option>' + state.employees.map(employee => `
+      <option value="${window.MaisonUi.escapeAttr(employee.id)}">${window.MaisonUi.escapeHTML(employee.nombre)}</option>
+    `).join('');
+    
+    if (state.employees.some(emp => String(emp.id) === String(currentVal))) {
+      select.value = currentVal;
+    } else {
+      select.value = 'all';
+    }
+  }
+
+  /** Limpia los filtros de la agenda del jefe. */
+  function clearBossFilters() {
+    document.getElementById('boss-filter-search').value = '';
+    document.getElementById('boss-filter-date').value = '';
+    document.getElementById('boss-filter-status').value = 'all';
+    document.getElementById('boss-filter-employee').value = 'all';
+    renderAppointments();
   }
 
   /** Exporta clientes registrados a CSV. */

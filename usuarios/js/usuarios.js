@@ -9,6 +9,7 @@
   let state = null;
   let currentClient = null;
   let selectedSlot = null;
+  let selectedDate = null;
 
   document.addEventListener('DOMContentLoaded', initUserPage);
 
@@ -61,16 +62,21 @@
     });
     document.getElementById('booking-form').addEventListener('submit', saveBooking);
     document.getElementById('booking-availability').addEventListener('click', event => {
-      const slotButton = event.target.closest('[data-date][data-time]');
+      const dayButton = event.target.closest('[data-day-select]');
+      const timeButton = event.target.closest('[data-time-select]');
 
-      if (!slotButton || slotButton.disabled) {
+      if (dayButton) {
+        selectedDate = dayButton.dataset.daySelect;
+        renderAvailability();
         return;
       }
 
-      selectedSlot = { date: slotButton.dataset.date, time: slotButton.dataset.time };
-      document.getElementById('booking-date').value = selectedSlot.date;
-      document.getElementById('booking-time').value = selectedSlot.time;
-      renderAvailability();
+      if (timeButton && !timeButton.disabled) {
+        selectedSlot = { date: selectedDate, time: timeButton.dataset.timeSelect };
+        document.getElementById('booking-date').value = selectedSlot.date;
+        document.getElementById('booking-time').value = selectedSlot.time;
+        renderAvailability();
+      }
     });
   }
 
@@ -196,6 +202,7 @@
     }
 
     selectedSlot = null;
+    selectedDate = window.MaisonStore.getNextDays(7)[0];
     document.getElementById('booking-service-id').value = service.id;
     document.getElementById('booking-date').value = '';
     document.getElementById('booking-time').value = '';
@@ -230,7 +237,7 @@
     `).join('');
   }
 
-  /** Renderiza horarios y marca ocupados en gris. */
+  /** Renderiza carrusel de fechas y cuadricula de horarios filtrados. */
   function renderAvailability() {
     const container = document.getElementById('booking-availability');
     const employeeId = document.getElementById('booking-employee').value;
@@ -240,14 +247,45 @@
       return;
     }
 
-    container.innerHTML = window.MaisonStore.getNextDays(7).flatMap(date => (
-      window.MaisonStore.getTimeSlots().map(time => {
-        const occupied = window.MaisonStore.isSlotTaken(employeeId, date, time);
-        const selected = selectedSlot && selectedSlot.date === date && selectedSlot.time === time;
-        const className = `availability-slot${occupied ? ' occupied' : ''}${selected ? ' selected' : ''}`;
-        return `<button class="${className}" type="button" data-date="${date}" data-time="${time}" ${occupied ? 'disabled' : ''}>${window.MaisonUi.formatDate(date)} ${time}</button>`;
-      })
-    )).join('');
+    const nextDays = window.MaisonStore.getNextDays(7);
+    if (!selectedDate || !nextDays.includes(selectedDate)) {
+      selectedDate = nextDays[0];
+    }
+
+    // 1. Render Days Carousel
+    const daysHtml = nextDays.map(date => {
+      const dateObj = new Date(`${date}T00:00:00`);
+      const weekday = dateObj.toLocaleDateString('es-CO', { weekday: 'short' }).replace('.', '');
+      const dayNum = dateObj.getDate();
+      const month = dateObj.toLocaleDateString('es-CO', { month: 'short' }).replace('.', '');
+      const isActive = selectedDate === date;
+      const activeClass = isActive ? ' active' : '';
+
+      return `
+        <button class="day-pill${activeClass}" type="button" data-day-select="${date}">
+          <span class="day-pill-weekday">${window.MaisonUi.escapeHTML(weekday)}</span>
+          <span class="day-pill-number">${window.MaisonUi.escapeHTML(dayNum)}</span>
+          <span class="day-pill-month">${window.MaisonUi.escapeHTML(month)}</span>
+        </button>
+      `;
+    }).join('');
+
+    // 2. Render Hours Grid
+    const hoursHtml = window.MaisonStore.getTimeSlots().map(time => {
+      const occupied = window.MaisonStore.isSlotTaken(employeeId, selectedDate, time);
+      const selected = selectedSlot && selectedSlot.date === selectedDate && selectedSlot.time === time;
+      const className = `availability-slot${occupied ? ' occupied' : ''}${selected ? ' selected' : ''}`;
+      return `
+        <button class="${className}" type="button" data-time-select="${time}" ${occupied ? 'disabled' : ''}>
+          ${window.MaisonUi.escapeHTML(time)}
+        </button>
+      `;
+    }).join('');
+
+    container.innerHTML = `
+      <div class="days-carousel">${daysHtml}</div>
+      <div class="hours-grid">${hoursHtml}</div>
+    `;
   }
 
   /**
@@ -302,11 +340,13 @@
   function openWhatsApp(appointment, service) {
     const employee = window.MaisonStore.getEmployeeById(appointment.employeeId);
     const rawPhone = state.settings.whatsapp || employee?.celular || '';
-    const phone = rawPhone.replace(/\D/g, '');
+    const cleanPhone = rawPhone.replace(/\D/g, '');
 
-    if (!phone) {
+    if (!cleanPhone) {
       return;
     }
+
+    const phone = cleanPhone.length === 10 ? `57${cleanPhone}` : cleanPhone;
 
     const message = [
       'Hola Maison Lash, quiero confirmar mi cita.',
@@ -316,7 +356,7 @@
       `Fecha: ${appointment.date}`,
       `Hora: ${appointment.time}`
     ].join('\n');
-    const url = `https://wa.me/57${phone}?text=${encodeURIComponent(message)}`;
+    const url = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
     window.open(url, '_blank');
   }
 })();

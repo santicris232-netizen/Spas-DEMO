@@ -213,12 +213,24 @@ img {
   color: var(--white);
 }
 
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 .view {
   display: none;
 }
 
 .view.active {
   display: block;
+  animation: fadeInUp 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 .card-grid,
@@ -423,14 +435,17 @@ textarea:focus {
   position: fixed;
   inset: 0;
   z-index: 50;
-  display: none;
+  display: flex;
   align-items: flex-end;
   justify-content: center;
-  background: rgba(7, 26, 26, 0.52);
+  background: rgba(7, 26, 26, 0);
+  pointer-events: none;
+  transition: background-color 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .sheet-backdrop.active {
-  display: flex;
+  background: rgba(7, 26, 26, 0.52);
+  pointer-events: auto;
 }
 
 .sheet-panel {
@@ -440,6 +455,12 @@ textarea:focus {
   border-radius: 18px 18px 0 0;
   background: var(--surface);
   box-shadow: var(--shadow);
+  transform: translateY(100%);
+  transition: transform 0.32s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.sheet-backdrop.active .sheet-panel {
+  transform: translateY(0);
 }
 
 .sheet-header {
@@ -508,7 +529,7 @@ textarea:focus {
   color: var(--white);
   padding: 12px 14px;
   opacity: 0;
-  transition: transform 0.24s ease, opacity 0.24s ease;
+  transition: transform 0.32s cubic-bezier(0.175, 0.885, 0.32, 1.15), opacity 0.24s ease;
 }
 
 .toast.active {
