@@ -1,0 +1,7 @@
+.git
+.gitignore
+.gemini
+.agents
+AGENTS.md
+README.md
+wrangler.toml

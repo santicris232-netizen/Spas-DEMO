@@ -15,6 +15,9 @@
     document.getElementById('register-form').addEventListener('submit', handleRegister);
     document.getElementById('show-register-button').addEventListener('click', showRegister);
     document.getElementById('cancel-register-button').addEventListener('click', showLogin);
+    window.addEventListener('maison-store-sync', () => {
+      window.MaisonAuth.redirectIfLoggedIn('');
+    });
   }
 
   /**

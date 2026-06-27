@@ -1,10 +1,12 @@
 /*
-  Maison Lash - almacenamiento compartido.
-  Mantiene una unica fuente de datos para servicios, productos, clientes,
-  empleados, citas y configuracion usando localStorage.
+  Maison Lash - almacenamiento compartido con Supabase y localStorage fallback.
 */
 (function () {
   'use strict';
+
+  const SUPABASE_URL = 'https://ycxtvfkybpkpdmjendwm.supabase.co';
+  const SUPABASE_KEY = 'sb_publishable_RO4YRzptDpMSHMt8AI3khw_z_C3IA3r';
+  let supabaseClient = null;
 
   const STORAGE_KEYS = {
     services: 'maisonlash_v3',
@@ -50,6 +52,18 @@
 
   let state = null;
 
+  /** Inicializa el cliente de Supabase si estan configuradas las claves. */
+  function initSupabase() {
+    if (
+      typeof window !== 'undefined' &&
+      window.supabase &&
+      SUPABASE_URL !== 'TU_SUPABASE_URL' &&
+      SUPABASE_KEY !== 'TU_SUPABASE_ANON_KEY'
+    ) {
+      supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    }
+  }
+
   /**
    * Carga y normaliza todos los datos persistidos de la aplicacion.
    * @returns {object} Estado completo de Maison Lash.
@@ -63,7 +77,16 @@
     const settings = { ...DEFAULT_SETTINGS, ...readStorage(STORAGE_KEYS.settings, DEFAULT_SETTINGS) };
 
     state = { services, products, clients, employees, appointments, settings };
-    saveAll();
+    saveAllLocal();
+
+    if (!supabaseClient) {
+      initSupabase();
+      if (supabaseClient) {
+        syncFromSupabase();
+        subscribeRealtime();
+      }
+    }
+
     return state;
   }
 
@@ -99,44 +122,113 @@
     return JSON.parse(JSON.stringify(value));
   }
 
-  /** Guarda todo el estado en localStorage. */
+  /** Guarda todo el estado localmente. */
+  function saveAllLocal() {
+    saveServicesLocal();
+    saveProductsLocal();
+    saveClientsLocal();
+    saveEmployeesLocal();
+    saveAppointmentsLocal();
+    saveSettingsLocal();
+  }
+
+  function saveServicesLocal() {
+    localStorage.setItem(STORAGE_KEYS.services, JSON.stringify(getState().services));
+  }
+
+  function saveProductsLocal() {
+    localStorage.setItem(STORAGE_KEYS.products, JSON.stringify(getState().products));
+  }
+
+  function saveClientsLocal() {
+    localStorage.setItem(STORAGE_KEYS.clients, JSON.stringify(getState().clients));
+  }
+
+  function saveEmployeesLocal() {
+    localStorage.setItem(STORAGE_KEYS.employees, JSON.stringify(getState().employees));
+  }
+
+  function saveAppointmentsLocal() {
+    localStorage.setItem(STORAGE_KEYS.appointments, JSON.stringify(getState().appointments));
+  }
+
+  function saveSettingsLocal() {
+    localStorage.setItem(STORAGE_KEYS.settings, JSON.stringify(getState().settings));
+  }
+
+  /** Guarda todo el estado en LocalStorage y Supabase. */
   function saveAll() {
-    saveServices();
-    saveProducts();
-    saveClients();
-    saveEmployees();
-    saveAppointments();
-    saveSettings();
+    saveAllLocal();
+    if (supabaseClient) {
+      getState().services.forEach(item => syncUpsert('services', item));
+      getState().products.forEach(item => syncUpsert('products', item));
+      getState().clients.forEach(item => syncUpsert('clients', item));
+      getState().employees.forEach(item => syncUpsert('employees', item));
+      getState().appointments.forEach(item => syncUpsert('appointments', item));
+      saveSettingsSupabase();
+    }
   }
 
   /** Guarda los servicios. */
   function saveServices() {
-    localStorage.setItem(STORAGE_KEYS.services, JSON.stringify(getState().services));
+    saveServicesLocal();
+    if (supabaseClient) {
+      getState().services.forEach(item => syncUpsert('services', item));
+    }
   }
 
   /** Guarda los productos visuales. */
   function saveProducts() {
-    localStorage.setItem(STORAGE_KEYS.products, JSON.stringify(getState().products));
+    saveProductsLocal();
+    if (supabaseClient) {
+      getState().products.forEach(item => syncUpsert('products', item));
+    }
   }
 
   /** Guarda los clientes. */
   function saveClients() {
-    localStorage.setItem(STORAGE_KEYS.clients, JSON.stringify(getState().clients));
+    saveClientsLocal();
+    if (supabaseClient) {
+      getState().clients.forEach(item => syncUpsert('clients', item));
+    }
   }
 
   /** Guarda los empleados. */
   function saveEmployees() {
-    localStorage.setItem(STORAGE_KEYS.employees, JSON.stringify(getState().employees));
+    saveEmployeesLocal();
+    if (supabaseClient) {
+      getState().employees.forEach(item => syncUpsert('employees', item));
+    }
   }
 
   /** Guarda las citas. */
   function saveAppointments() {
-    localStorage.setItem(STORAGE_KEYS.appointments, JSON.stringify(getState().appointments));
+    saveAppointmentsLocal();
+    if (supabaseClient) {
+      getState().appointments.forEach(item => syncUpsert('appointments', item));
+    }
   }
 
   /** Guarda la configuracion general. */
   function saveSettings() {
-    localStorage.setItem(STORAGE_KEYS.settings, JSON.stringify(getState().settings));
+    saveSettingsLocal();
+    saveSettingsSupabase();
+  }
+
+  function saveSettingsSupabase() {
+    if (supabaseClient) {
+      Object.entries(getState().settings).forEach(([key, value]) => {
+        syncUpsert('settings', { key, value });
+      });
+    }
+  }
+
+  /** Lanza una operacion upsert en Supabase de forma segura. */
+  function syncUpsert(table, data) {
+    if (!supabaseClient) return;
+    supabaseClient.from(table).upsert(data).then(({ error }) => {
+      if (error) console.error(`Error saving to Supabase table ${table}:`, error);
+    });
   }
 
   /**
@@ -419,7 +511,15 @@
         categories: getCategoriesByServiceIds(serviceIds, currentState.services)
       };
     });
-    saveAll();
+    saveAllLocal();
+
+    if (supabaseClient) {
+      supabaseClient.from('services').delete().eq('id', serviceId).then(({ error }) => {
+        if (error) console.error('Error deleting service from Supabase:', error);
+      });
+      currentState.employees.forEach(item => syncUpsert('employees', item));
+      currentState.appointments.forEach(item => syncUpsert('appointments', item));
+    }
   }
 
   /**
@@ -456,7 +556,13 @@
   function deleteProduct(productId) {
     const currentState = getState();
     currentState.products = currentState.products.filter(product => String(product.id) !== String(productId));
-    saveProducts();
+    saveProductsLocal();
+
+    if (supabaseClient) {
+      supabaseClient.from('products').delete().eq('id', productId).then(({ error }) => {
+        if (error) console.error('Error deleting product from Supabase:', error);
+      });
+    }
   }
 
   /**
@@ -529,8 +635,15 @@
     currentState.appointments = currentState.appointments.map(appointment => (
       String(appointment.employeeId) === String(employeeId) ? { ...appointment, employeeId: '' } : appointment
     ));
-    saveEmployees();
-    saveAppointments();
+    saveEmployeesLocal();
+    saveAppointmentsLocal();
+
+    if (supabaseClient) {
+      supabaseClient.from('employees').delete().eq('id', employeeId).then(({ error }) => {
+        if (error) console.error('Error deleting employee from Supabase:', error);
+      });
+      currentState.appointments.forEach(item => syncUpsert('appointments', item));
+    }
   }
 
   /**
@@ -576,7 +689,13 @@
   function deleteAppointment(appointmentId) {
     const currentState = getState();
     currentState.appointments = currentState.appointments.filter(appointment => String(appointment.id) !== String(appointmentId));
-    saveAppointments();
+    saveAppointmentsLocal();
+
+    if (supabaseClient) {
+      supabaseClient.from('appointments').delete().eq('id', appointmentId).then(({ error }) => {
+        if (error) console.error('Error deleting appointment from Supabase:', error);
+      });
+    }
   }
 
   /**
@@ -634,6 +753,74 @@
    */
   function getTimeSlots() {
     return ['09:00', '10:00', '11:00', '14:00', '15:00', '16:00', '17:00'];
+  }
+
+  async function syncFromSupabase() {
+    if (!supabaseClient) return;
+    try {
+      const [
+        { data: s },
+        { data: p },
+        { data: c },
+        { data: e },
+        { data: a },
+        { data: st }
+      ] = await Promise.all([
+        supabaseClient.from('services').select('*'),
+        supabaseClient.from('products').select('*'),
+        supabaseClient.from('clients').select('*'),
+        supabaseClient.from('employees').select('*'),
+        supabaseClient.from('appointments').select('*'),
+        supabaseClient.from('settings').select('*')
+      ]);
+
+      let updated = false;
+
+      if (s) { state.services = migrateServices(s); updated = true; }
+      if (p) { state.products = migrateProducts(p); updated = true; }
+      if (c) { state.clients = migrateClients(c); updated = true; }
+      if (e) { state.employees = migrateEmployees(e, state.services); updated = true; }
+      if (a) { state.appointments = migrateAppointments(a, state.services); updated = true; }
+
+      if (st) {
+        const settingsObj = {};
+        st.forEach(row => {
+          settingsObj[row.key] = row.value;
+        });
+        state.settings = { ...DEFAULT_SETTINGS, ...settingsObj };
+        updated = true;
+      }
+
+      if (updated) {
+        saveAllLocal();
+        window.dispatchEvent(new CustomEvent('maison-store-sync'));
+      }
+    } catch (err) {
+      console.error('Supabase sync error:', err);
+    }
+  }
+
+  function subscribeRealtime() {
+    if (!supabaseClient) return;
+
+    supabaseClient
+      .channel('schema-db-changes')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'appointments' }, () => {
+        syncFromSupabase();
+      })
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'services' }, () => {
+        syncFromSupabase();
+      })
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'products' }, () => {
+        syncFromSupabase();
+      })
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'employees' }, () => {
+        syncFromSupabase();
+      })
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'settings' }, () => {
+        syncFromSupabase();
+      })
+      .subscribe();
   }
 
   window.MaisonStore = {

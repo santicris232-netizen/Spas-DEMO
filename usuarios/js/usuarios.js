@@ -27,6 +27,11 @@
     bindBookingSheet();
     document.getElementById('logout-button').addEventListener('click', () => window.MaisonAuth.logout('../../'));
     renderAll();
+    window.addEventListener('maison-store-sync', () => {
+      state = window.MaisonStore.getState();
+      currentClient = getCurrentClient();
+      renderAll();
+    });
   }
 
   /** Renderiza toda la informacion visible del cliente. */

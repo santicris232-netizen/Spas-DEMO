@@ -30,6 +30,10 @@
     window.MaisonUi.bindPriceFormatter('service-price');
     window.MaisonUi.bindPriceFormatter('product-price');
     renderAll();
+    window.addEventListener('maison-store-sync', () => {
+      state = window.MaisonStore.getState();
+      renderAll();
+    });
   }
 
   /** Configura navegacion por secciones moviles. */

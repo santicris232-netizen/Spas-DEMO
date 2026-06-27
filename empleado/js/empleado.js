@@ -34,6 +34,16 @@
     document.getElementById('employee-title').textContent = currentEmployee.nombre;
     renderSummary();
     renderAppointments();
+    window.addEventListener('maison-store-sync', () => {
+      state = window.MaisonStore.getState();
+      currentEmployee = window.MaisonStore.getEmployeeById(session.employeeId);
+      if (!currentEmployee) {
+        window.MaisonAuth.logout('../../');
+        return;
+      }
+      renderSummary();
+      renderAppointments();
+    });
   }
 
   /** Renderiza resumen de la agenda del empleado. */
