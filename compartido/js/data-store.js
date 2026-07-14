@@ -486,8 +486,14 @@
       ...employee,
       serviceNames: getServiceNamesByIds(employee.serviceIds, currentState.services)
     }));
+    currentState.appointments = currentState.appointments.map(appointment => ({
+      ...appointment,
+      serviceNames: getServiceNamesByIds(appointment.serviceIds, currentState.services),
+      categories: getCategoriesByServiceIds(appointment.serviceIds, currentState.services)
+    }));
     saveServices();
     saveEmployees();
+    saveAppointments();
     return serviceToSave;
   }
 

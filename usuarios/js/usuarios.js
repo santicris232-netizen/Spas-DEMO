@@ -311,6 +311,14 @@
       return;
     }
 
+    const now = new Date();
+    now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+    const today = now.toISOString().slice(0, 10);
+    if (date < today) {
+      window.MaisonUi.showToast('No puedes reservar citas en fechas pasadas.');
+      return;
+    }
+
     if (window.MaisonStore.isSlotTaken(employeeId, date, time)) {
       window.MaisonUi.showToast('Ese horario ya esta ocupado.');
       renderAvailability();
