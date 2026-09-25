@@ -2,106 +2,146 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <meta name="theme-color" content="#071a1a">
-  <title>Maison Lash - Usuario</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#175050">
+  <title>CristaSpa</title>
   <link rel="stylesheet" href="../../compartido/css/base.css">
   <link rel="stylesheet" href="../css/usuarios.css">
+  <script type="module" src="../js/usuarios.js"></script>
 </head>
 <body>
   <main class="mobile-shell">
     <header class="app-header">
-      <div class="brand-block">
-        <p class="brand-kicker">Cliente</p>
-        <h1 class="brand-name">MAISON LASH</h1>
+      <div class="brand-row">
+        <div data-marca-logo></div>
+        <div class="brand-block">
+          <p class="brand-kicker">Cliente</p>
+          <h1 class="brand-name" data-marca-nombre>CristaSpa</h1>
+        </div>
       </div>
       <div class="header-actions">
-        <span class="role-pill" id="client-name-pill">Usuario</span>
-        <button class="icon-button" id="logout-button" type="button" aria-label="Cerrar sesion">Salir</button>
+        <span class="role-pill" id="cliente-nombre">Hola</span>
       </div>
     </header>
 
-    <nav class="segment-scroll" aria-label="Menu de usuario">
-      <button class="segment-button active" type="button" data-view="appointments-view">Mis citas</button>
-      <button class="segment-button" type="button" data-view="products-view">Productos</button>
-      <button class="segment-button" type="button" data-view="services-view">Servicios</button>
-      <button class="segment-button" type="button" data-view="brows-view">Cejas</button>
-      <button class="segment-button" type="button" data-view="lips-view">Labios</button>
-      <button class="segment-button" type="button" data-view="lashes-view">Pestanas</button>
+    <nav class="segment-scroll" aria-label="Menú del cliente" id="navegacion">
+      <button class="segment-button active" type="button" data-view="vista-inicio">Inicio</button>
+      <button class="segment-button" type="button" data-view="vista-reservar">Reservar</button>
+      <button class="segment-button" type="button" data-view="vista-citas">Mis citas</button>
+      <button class="segment-button" type="button" data-view="vista-productos">Productos</button>
+      <button class="segment-button" type="button" data-view="vista-perfil">Perfil</button>
     </nav>
 
     <section class="mobile-content">
-      <div id="appointments-view" class="view active">
-        <p class="section-kicker">Agenda</p>
-        <h2 class="section-title" id="welcome-title">Mis citas</h2>
-        <div class="stack-list" id="appointments-list"></div>
+      <!-- Inicio -->
+      <div id="vista-inicio" class="view active">
+        <p class="section-kicker">Bienvenida</p>
+        <h2 class="section-title" id="saludo">Hola</h2>
+        <div id="proxima-cita" class="stack-list"></div>
+        <h3 class="subsection-title">¿Qué quieres hacerte?</h3>
+        <div class="chip-list" id="inicio-categorias"></div>
+        <div class="contacto-empresa" id="contacto-empresa"></div>
       </div>
 
-      <div id="products-view" class="view">
-        <p class="section-kicker">Catalogo</p>
+      <!-- Reservar -->
+      <div id="vista-reservar" class="view">
+        <p class="section-kicker">Agenda</p>
+        <h2 class="section-title">Reservar</h2>
+        <p class="section-note">Elige uno o varios servicios y luego el día y la hora.</p>
+        <div class="chip-list filtro-categorias" id="filtro-categorias"></div>
+        <div class="card-grid" id="lista-servicios"></div>
+      </div>
+
+      <!-- Mis citas -->
+      <div id="vista-citas" class="view">
+        <p class="section-kicker">Agenda</p>
+        <h2 class="section-title">Mis citas</h2>
+        <div class="chip-list" id="pestanas-citas">
+          <button class="chip-option active" type="button" data-grupo="proximas">Próximas</button>
+          <button class="chip-option" type="button" data-grupo="historial">Historial</button>
+        </div>
+        <div class="stack-list lista-citas" id="lista-citas"></div>
+      </div>
+
+      <!-- Productos -->
+      <div id="vista-productos" class="view">
+        <p class="section-kicker">Catálogo</p>
         <h2 class="section-title">Productos</h2>
-        <div class="card-grid" id="products-list"></div>
+        <div class="card-grid" id="lista-productos"></div>
       </div>
 
-      <div id="services-view" class="view">
-        <p class="section-kicker">Agenda</p>
-        <h2 class="section-title">Servicios</h2>
-        <div class="card-grid" id="services-list"></div>
-      </div>
+      <!-- Perfil -->
+      <div id="vista-perfil" class="view">
+        <p class="section-kicker">Cuenta</p>
+        <h2 class="section-title">Mi perfil</h2>
+        <form class="form-card" id="form-perfil" novalidate>
+          <div class="field-row two">
+            <div class="field-group"><label for="perfil-nombre">Nombre</label><input id="perfil-nombre" required autocomplete="given-name"></div>
+            <div class="field-group"><label for="perfil-apellido">Apellido</label><input id="perfil-apellido" autocomplete="family-name"></div>
+          </div>
+          <div class="field-group"><label for="perfil-telefono">Celular</label><input id="perfil-telefono" type="tel" inputmode="numeric" autocomplete="tel"></div>
+          <div class="field-group"><label for="perfil-correo">Correo</label><input id="perfil-correo" type="email" disabled></div>
+          <div class="field-group"><label for="perfil-nacimiento">Fecha de nacimiento</label><input id="perfil-nacimiento" type="date"></div>
+          <button class="primary-button" type="submit">Guardar cambios</button>
+        </form>
 
-      <div id="brows-view" class="view">
-        <p class="section-kicker">Servicios</p>
-        <h2 class="section-title">Cejas</h2>
-        <div class="card-grid" id="brows-list"></div>
-      </div>
+        <form class="form-card" id="form-clave" novalidate>
+          <h3 class="form-title">Cambiar contraseña</h3>
+          <div class="field-group"><label for="clave-nueva">Nueva contraseña</label><input id="clave-nueva" type="password" minlength="8" autocomplete="new-password" required></div>
+          <button class="secondary-button" type="submit">Actualizar contraseña</button>
+        </form>
 
-      <div id="lips-view" class="view">
-        <p class="section-kicker">Servicios</p>
-        <h2 class="section-title">Labios</h2>
-        <div class="card-grid" id="lips-list"></div>
-      </div>
-
-      <div id="lashes-view" class="view">
-        <p class="section-kicker">Servicios</p>
-        <h2 class="section-title">Pestanas</h2>
-        <div class="card-grid" id="lashes-list"></div>
+        <div class="form-card">
+          <button class="secondary-button" type="button" id="cerrar-sesion">Cerrar sesión</button>
+          <button class="danger-button" type="button" id="eliminar-cuenta">Eliminar mi cuenta en esta empresa</button>
+          <p class="muted-text">Eliminar tu cuenta borra tus datos personales de esta empresa y cancela tus citas futuras (Ley 1581 de 2012).</p>
+        </div>
       </div>
     </section>
   </main>
 
-  <div class="sheet-backdrop" id="booking-sheet" aria-hidden="true">
-    <section class="sheet-panel" role="dialog" aria-modal="true" aria-labelledby="booking-title">
+  <!-- Barra de selección de servicios -->
+  <div class="seleccion-barra hidden" id="seleccion-barra" role="region" aria-label="Servicios elegidos">
+    <div>
+      <strong id="seleccion-resumen"></strong>
+      <span id="seleccion-detalle"></span>
+    </div>
+    <button class="primary-button" type="button" id="seleccion-continuar">Elegir horario</button>
+  </div>
+
+  <!-- Hoja de reserva / reprogramación -->
+  <div class="sheet-backdrop" id="hoja-reserva" aria-hidden="true">
+    <section class="sheet-panel" role="dialog" aria-modal="true" aria-labelledby="reserva-titulo">
       <div class="sheet-header">
         <div>
-          <p class="section-kicker">Asignacion</p>
-          <h2 class="sheet-title" id="booking-title">Nueva cita</h2>
+          <p class="section-kicker" id="reserva-kicker">Nueva cita</p>
+          <h2 class="sheet-title" id="reserva-titulo">Elige tu horario</h2>
         </div>
-        <button class="icon-button" id="close-booking" type="button" aria-label="Cerrar">X</button>
+        <button class="icon-button" type="button" data-cerrar-hoja aria-label="Cerrar">✕</button>
       </div>
-      <form class="sheet-body" id="booking-form" autocomplete="off">
-        <input type="hidden" id="booking-service-id">
-        <div class="booking-service-summary" id="booking-service-summary"></div>
+      <form class="sheet-body" id="form-reserva" novalidate>
+        <div class="booking-service-summary" id="reserva-resumen"></div>
         <div class="field-group">
-          <label for="booking-employee">Especialista</label>
-          <select id="booking-employee" required></select>
+          <label for="reserva-especialista">Especialista</label>
+          <select id="reserva-especialista"></select>
         </div>
         <div class="field-group">
-          <label>Fecha y hora disponibles</label>
-          <div class="availability-wrapper" id="booking-availability"></div>
+          <label>Día</label>
+          <div class="days-carousel" id="reserva-dias"></div>
         </div>
-        <input type="hidden" id="booking-date" required>
-        <input type="hidden" id="booking-time" required>
-        <button class="primary-button" type="submit">Confirmar por WhatsApp</button>
+        <div class="field-group">
+          <label>Hora</label>
+          <div class="hours-grid" id="reserva-horas"></div>
+        </div>
+        <div class="field-group" id="reserva-notas-campo">
+          <label for="reserva-notas">Notas para el negocio (opcional)</label>
+          <textarea id="reserva-notas" maxlength="300" rows="2"></textarea>
+        </div>
+        <button class="primary-button" type="submit" id="reserva-confirmar" disabled>Confirmar cita</button>
       </form>
     </section>
   </div>
 
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
-
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="../../compartido/js/data-store.js"></script>
-  <script src="../../compartido/js/auth.js"></script>
-  <script src="../../compartido/js/ui.js"></script>
-  <script src="../js/usuarios.js"></script>
 </body>
 </html>

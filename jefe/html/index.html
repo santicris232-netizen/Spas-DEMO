@@ -2,172 +2,133 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <meta name="theme-color" content="#071a1a">
-  <title>Maison Lash - Jefe</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#175050">
+  <title>CristaSpa</title>
   <link rel="stylesheet" href="../../compartido/css/base.css">
   <link rel="stylesheet" href="../css/jefe.css">
+  <script type="module" src="../js/jefe.js"></script>
 </head>
 <body>
   <main class="mobile-shell">
     <header class="app-header">
-      <div class="brand-block">
-        <p class="brand-kicker">Jefe</p>
-        <h1 class="brand-name">MAISON LASH</h1>
+      <div class="brand-row">
+        <div data-marca-logo></div>
+        <div class="brand-block">
+          <p class="brand-kicker" id="rol-kicker">Jefe</p>
+          <h1 class="brand-name" data-marca-nombre>CristaSpa</h1>
+        </div>
       </div>
       <div class="header-actions">
-        <span class="role-pill">Control</span>
-        <button class="icon-button" id="logout-button" type="button" aria-label="Cerrar sesion">Salir</button>
+        <button class="icon-button" id="cerrar-sesion" type="button" aria-label="Cerrar sesión" title="Cerrar sesión">⎋</button>
       </div>
     </header>
 
-    <nav class="segment-scroll" aria-label="Menu de jefe">
-      <button class="segment-button active" type="button" data-view="services-view">Servicios</button>
-      <button class="segment-button" type="button" data-view="products-view">Productos</button>
-      <button class="segment-button" type="button" data-view="employees-view">Empleados</button>
-      <button class="segment-button" type="button" data-view="calendar-view">Calendario</button>
-      <button class="segment-button" type="button" data-view="settings-view">Config</button>
-      <button class="segment-button" type="button" data-view="exports-view">Archivos</button>
+    <nav class="segment-scroll" aria-label="Menú del negocio" id="navegacion">
+      <button class="segment-button active" type="button" data-view="vista-agenda">Agenda</button>
+      <button class="segment-button" type="button" data-view="vista-clientes">Clientes</button>
+      <button class="segment-button solo-jefe" type="button" data-view="vista-catalogo">Catálogo</button>
+      <button class="segment-button solo-jefe" type="button" data-view="vista-equipo">Equipo</button>
+      <button class="segment-button solo-jefe" type="button" data-view="vista-empresa">Mi empresa</button>
+      <button class="segment-button solo-jefe" type="button" data-view="vista-reportes">Reportes</button>
     </nav>
 
     <section class="mobile-content boss-content">
-      <div id="services-view" class="view active">
-        <p class="section-kicker">Gestion</p>
-        <h2 class="section-title">Servicios</h2>
-        <form class="form-card" id="service-form" autocomplete="off">
-          <h3 class="form-title" id="service-form-title">Nuevo servicio</h3>
-          <input type="hidden" id="service-id">
-          <div class="field-group"><label for="service-category">Categoria</label><select id="service-category"><option value="pestanas">Pestanas</option><option value="cejas">Cejas</option><option value="labios">Labios</option></select></div>
-          <div class="field-group"><label for="service-name">Nombre</label><input type="text" id="service-name" required></div>
-          <div class="field-group"><label for="service-description">Descripcion</label><textarea id="service-description" required></textarea></div>
-          <div class="field-group"><label for="service-price">Precio</label><input type="text" id="service-price" required></div>
-          <div class="field-group"><label for="service-image">Imagen</label><div class="file-field"><input type="file" id="service-image" accept="image/*"><img class="image-preview hidden" id="service-preview" alt="Vista previa servicio"></div></div>
-          <button class="primary-button" type="submit">Guardar servicio</button>
-          <button class="secondary-button" type="button" id="clear-service-form">Limpiar</button>
-        </form>
-        <div class="stack-list boss-list" id="services-list"></div>
-      </div>
-
-      <div id="products-view" class="view">
-        <p class="section-kicker">Catalogo</p>
-        <h2 class="section-title">Productos</h2>
-        <form class="form-card" id="product-form" autocomplete="off">
-          <h3 class="form-title" id="product-form-title">Nuevo producto</h3>
-          <input type="hidden" id="product-id">
-          <div class="field-group"><label for="product-category">Categoria</label><select id="product-category"><option value="pestanas">Pestanas</option><option value="cejas">Cejas</option><option value="labios">Labios</option></select></div>
-          <div class="field-group"><label for="product-name">Nombre</label><input type="text" id="product-name" required></div>
-          <div class="field-group"><label for="product-description">Descripcion</label><textarea id="product-description" required></textarea></div>
-          <div class="field-group"><label for="product-price">Precio</label><input type="text" id="product-price" required></div>
-          <div class="field-group"><label for="product-image">Imagen</label><div class="file-field"><input type="file" id="product-image" accept="image/*"><img class="image-preview hidden" id="product-preview" alt="Vista previa producto"></div></div>
-          <button class="primary-button" type="submit">Guardar producto</button>
-          <button class="secondary-button" type="button" id="clear-product-form">Limpiar</button>
-        </form>
-        <div class="stack-list boss-list" id="products-list"></div>
-      </div>
-
-      <div id="employees-view" class="view">
-        <p class="section-kicker">Equipo</p>
-        <h2 class="section-title">Empleados</h2>
-        <form class="form-card" id="employee-form" autocomplete="off">
-          <h3 class="form-title" id="employee-form-title">Nuevo empleado</h3>
-          <input type="hidden" id="employee-id">
-          <div class="field-group"><label for="employee-name">Nombre</label><input type="text" id="employee-name" required></div>
-          <div class="field-group"><label for="employee-email">Correo</label><input type="email" id="employee-email" required></div>
-          <div class="field-group"><label for="employee-phone">Celular</label><input type="tel" id="employee-phone" required></div>
-          <div class="field-group"><label for="employee-role">Cargo</label><input type="text" id="employee-role" required></div>
-          <div class="field-group"><label for="employee-services">Servicios</label><select id="employee-services" multiple required></select></div>
-          <div class="field-group"><label for="employee-user">Usuario</label><input type="text" id="employee-user" required></div>
-          <div class="field-group"><label for="employee-password">Contrasena</label><input type="text" id="employee-password" required></div>
-          <div class="field-group"><label for="employee-image">Imagen</label><div class="file-field"><input type="file" id="employee-image" accept="image/*"><img class="image-preview hidden" id="employee-preview" alt="Vista previa empleado"></div></div>
-          <button class="primary-button" type="submit">Guardar empleado</button>
-          <button class="secondary-button" type="button" id="clear-employee-form">Limpiar</button>
-        </form>
-        <div class="stack-list boss-list" id="employees-list"></div>
-      </div>
-
-      <div id="calendar-view" class="view">
-        <p class="section-kicker">Agenda</p>
-        <h2 class="section-title">Calendario</h2>
-        <form class="form-card" id="appointment-form" autocomplete="off">
-          <h3 class="form-title" id="appointment-form-title">Nueva cita</h3>
-          <input type="hidden" id="appointment-id">
-          <div class="field-group"><label for="appointment-client-name">Cliente</label><input type="text" id="appointment-client-name" required></div>
-          <div class="field-group"><label for="appointment-client-email">Correo</label><input type="email" id="appointment-client-email" required></div>
-          <div class="field-group"><label for="appointment-client-phone">Celular</label><input type="tel" id="appointment-client-phone" required></div>
-          <div class="field-group"><label for="appointment-services">Servicios</label><select id="appointment-services" multiple required></select></div>
-          <div class="field-group"><label for="appointment-employee">Especialista</label><select id="appointment-employee" required></select></div>
-          <div class="field-row"><div class="field-group"><label for="appointment-date">Fecha</label><input type="date" id="appointment-date" required></div><div class="field-group"><label for="appointment-time">Hora</label><input type="time" id="appointment-time" required></div></div>
-          <div class="field-group"><label for="appointment-status">Estado</label><select id="appointment-status"><option value="pendiente">Pendiente</option><option value="confirmada">Confirmada</option><option value="completada">Completada</option><option value="cancelada">Cancelada</option></select></div>
-          <div class="field-group"><label for="appointment-notes">Notas</label><textarea id="appointment-notes"></textarea></div>
-          <button class="primary-button" type="submit">Guardar cita</button>
-          <button class="secondary-button" type="button" id="clear-appointment-form">Limpiar</button>
-        </form>
-
-        <section class="calendar-filters form-card">
-          <h3 class="form-title" style="font-size: 1.15rem; color: var(--teal);">Filtrar y Buscar Citas</h3>
-          <div class="field-group">
-            <label for="boss-filter-search">Buscar cliente</label>
-            <input type="text" id="boss-filter-search" placeholder="Buscar por nombre, correo o celular...">
-          </div>
-          <div class="filter-row">
-            <div class="field-group">
-              <label for="boss-filter-date">Fecha</label>
-              <input type="date" id="boss-filter-date">
-            </div>
-            <div class="field-group">
-              <label for="boss-filter-status">Estado</label>
-              <select id="boss-filter-status">
-                <option value="all">Todos</option>
-                <option value="pendiente">Pendiente</option>
-                <option value="confirmada">Confirmada</option>
-                <option value="completada">Completada</option>
-                <option value="cancelada">Cancelada</option>
-              </select>
-            </div>
-          </div>
-          <div class="filter-row">
-            <div class="field-group">
-              <label for="boss-filter-employee">Especialista</label>
-              <select id="boss-filter-employee"></select>
-            </div>
-            <div class="field-group" style="justify-content: flex-end;">
-              <button class="secondary-button" type="button" id="clear-boss-filters" style="min-height: 44px;">Limpiar Filtros</button>
-            </div>
-          </div>
-        </section>
-
-        <div class="stack-list boss-list" id="appointments-list"></div>
-      </div>
-
-      <div id="settings-view" class="view">
-        <p class="section-kicker">Conexion</p>
-        <h2 class="section-title">Configuracion</h2>
-        <form class="form-card" id="settings-form" autocomplete="off">
-          <div class="field-group"><label for="setting-whatsapp">WhatsApp</label><input type="tel" id="setting-whatsapp" placeholder="3001234567"></div>
-          <div class="toggle-field"><label><input type="checkbox" id="setting-instagram-enabled"> Instagram</label><input type="text" id="setting-instagram" placeholder="URL o usuario"></div>
-          <div class="toggle-field"><label><input type="checkbox" id="setting-facebook-enabled"> Facebook</label><input type="text" id="setting-facebook" placeholder="URL o usuario"></div>
-          <div class="toggle-field"><label><input type="checkbox" id="setting-tiktok-enabled"> TikTok</label><input type="text" id="setting-tiktok" placeholder="URL o usuario"></div>
-          <button class="primary-button" type="submit">Guardar configuracion</button>
-        </form>
-      </div>
-
-      <div id="exports-view" class="view">
-        <p class="section-kicker">Archivos</p>
-        <h2 class="section-title">Exportar</h2>
-        <div class="export-grid">
-          <button class="export-card" type="button" id="export-clients"><strong>Clientes</strong><span>Datos de registro</span></button>
-          <button class="export-card" type="button" id="export-attended"><strong>Atendidos</strong><span>Citas completadas</span></button>
+      <!-- Agenda -->
+      <div id="vista-agenda" class="view active">
+        <div id="checklist" class="solo-jefe"></div>
+        <div class="agenda-controles">
+          <button class="icon-button oscuro" type="button" id="agenda-anterior" aria-label="Anterior">‹</button>
+          <button class="fecha-actual" type="button" id="agenda-hoy" title="Ir a hoy"><span id="agenda-titulo"></span></button>
+          <button class="icon-button oscuro" type="button" id="agenda-siguiente" aria-label="Siguiente">›</button>
         </div>
+        <div class="chip-list agenda-filtros">
+          <button class="chip-option active" type="button" data-rango="dia">Día</button>
+          <button class="chip-option" type="button" data-rango="semana">Semana</button>
+          <select id="agenda-especialista" aria-label="Filtrar por especialista"></select>
+          <select id="agenda-estado" aria-label="Filtrar por estado">
+            <option value="">Todos los estados</option>
+            <option value="pendiente">Pendientes</option>
+            <option value="confirmada">Confirmadas</option>
+            <option value="completada">Realizadas</option>
+            <option value="no_asistio">No asistió</option>
+            <option value="cancelada">Canceladas</option>
+          </select>
+        </div>
+        <input type="search" id="agenda-busqueda" class="busqueda" placeholder="Buscar cliente en esta vista…" aria-label="Buscar cliente">
+        <button class="primary-button" type="button" id="nueva-cita" data-escritura>+ Nueva cita</button>
+        <div class="stack-list boss-list" id="agenda-lista"></div>
+      </div>
+
+      <!-- Clientes -->
+      <div id="vista-clientes" class="view">
+        <p class="section-kicker">Personas</p>
+        <h2 class="section-title">Clientes</h2>
+        <input type="search" id="clientes-busqueda" class="busqueda" placeholder="Buscar por nombre, correo o celular…" aria-label="Buscar clientes">
+        <div class="acciones-fila">
+          <button class="primary-button" type="button" id="nuevo-cliente" data-escritura>+ Nuevo cliente</button>
+          <button class="secondary-button solo-jefe" type="button" id="exportar-clientes">Exportar CSV</button>
+        </div>
+        <div class="stack-list boss-list" id="clientes-lista"></div>
+      </div>
+
+      <!-- Catálogo -->
+      <div id="vista-catalogo" class="view">
+        <p class="section-kicker">Oferta</p>
+        <h2 class="section-title">Catálogo</h2>
+        <div class="chip-list" id="catalogo-pestanas">
+          <button class="chip-option active" type="button" data-sub="servicios">Servicios</button>
+          <button class="chip-option" type="button" data-sub="productos">Productos</button>
+          <button class="chip-option" type="button" data-sub="categorias">Categorías</button>
+        </div>
+        <button class="primary-button" type="button" id="catalogo-nuevo" data-escritura>+ Nuevo servicio</button>
+        <div class="stack-list boss-list" id="catalogo-lista"></div>
+      </div>
+
+      <!-- Equipo -->
+      <div id="vista-equipo" class="view">
+        <p class="section-kicker">Personas</p>
+        <h2 class="section-title">Equipo</h2>
+        <div class="chip-list" id="equipo-pestanas">
+          <button class="chip-option active" type="button" data-sub="especialistas">Especialistas</button>
+          <button class="chip-option" type="button" data-sub="miembros">Jefes y recepción</button>
+          <button class="chip-option" type="button" data-sub="cierres">Cierres y ausencias</button>
+        </div>
+        <button class="primary-button" type="button" id="equipo-nuevo" data-escritura>+ Nuevo especialista</button>
+        <div class="stack-list boss-list" id="equipo-lista"></div>
+      </div>
+
+      <!-- Mi empresa -->
+      <div id="vista-empresa" class="view">
+        <p class="section-kicker">Configuración</p>
+        <h2 class="section-title">Mi empresa</h2>
+        <div id="empresa-secciones" class="stack-list"></div>
+      </div>
+
+      <!-- Reportes -->
+      <div id="vista-reportes" class="view">
+        <p class="section-kicker">Resultados</p>
+        <h2 class="section-title">Reportes</h2>
+        <div class="field-group"><label for="reportes-mes">Mes</label><input type="month" id="reportes-mes"></div>
+        <div id="reportes-contenido" class="stack-list"></div>
       </div>
     </section>
   </main>
 
-  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <!-- Hoja genérica: cada sección dibuja aquí su formulario -->
+  <div class="sheet-backdrop" id="hoja" aria-hidden="true">
+    <section class="sheet-panel" role="dialog" aria-modal="true" aria-labelledby="hoja-titulo">
+      <div class="sheet-header">
+        <div>
+          <p class="section-kicker" id="hoja-kicker"></p>
+          <h2 class="sheet-title" id="hoja-titulo"></h2>
+        </div>
+        <button class="icon-button" type="button" data-cerrar-hoja aria-label="Cerrar">✕</button>
+      </div>
+      <div id="hoja-contenido"></div>
+    </section>
+  </div>
 
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="../../compartido/js/data-store.js"></script>
-  <script src="../../compartido/js/auth.js"></script>
-  <script src="../../compartido/js/ui.js"></script>
-  <script src="../js/jefe.js"></script>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
 </body>
 </html>

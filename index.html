@@ -2,63 +2,96 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <meta name="theme-color" content="#071a1a">
-  <title>Maison Lash - Acceso</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#175050">
+  <meta name="description" content="Reserva y gestiona tus citas.">
+  <title>CristaSpa</title>
   <link rel="stylesheet" href="compartido/css/base.css">
-  <link rel="stylesheet" href="CSS/styles.css">
+  <link rel="stylesheet" href="acceso/css/login.css">
+  <script type="module" src="acceso/js/login.js"></script>
 </head>
 <body>
   <main class="auth-page">
     <section class="auth-card" aria-labelledby="auth-title">
       <div class="auth-brand">
-        <p class="brand-kicker">By Cami Portela</p>
-        <h1 class="brand-name" id="auth-title">MAISON LASH</h1>
+        <div class="auth-logo" data-marca-logo></div>
+        <h1 class="brand-name" id="auth-title" data-marca-nombre>CristaSpa</h1>
+        <p class="auth-subtitle" id="auth-subtitle">Ingresa a tu cuenta</p>
       </div>
 
-      <form id="login-form" class="auth-form" autocomplete="off">
+      <div class="auth-loading" id="vista-cargando" aria-live="polite">Cargando…</div>
+
+      <!-- Iniciar sesión -->
+      <form id="vista-login" class="auth-form hidden" novalidate>
         <div class="field-group">
-          <label for="login-username">Usuario o correo</label>
-          <input type="text" id="login-username" autocomplete="username" required>
+          <label for="login-correo">Correo</label>
+          <input type="email" id="login-correo" autocomplete="username" inputmode="email" required>
         </div>
         <div class="field-group">
-          <label for="login-password">Contrasena</label>
-          <input type="password" id="login-password" autocomplete="current-password" required>
+          <label for="login-clave">Contraseña</label>
+          <input type="password" id="login-clave" autocomplete="current-password" required>
         </div>
         <button class="primary-button" type="submit">Ingresar</button>
-        <button class="secondary-button" type="button" id="show-register-button">Crear cuenta</button>
-        <p class="form-error" id="login-error"></p>
+        <button class="link-button auth-link" type="button" data-ir="vista-recuperar">¿Olvidaste tu contraseña?</button>
+        <button class="secondary-button solo-empresa" type="button" data-ir="vista-registro">Crear cuenta</button>
+        <p class="auth-note solo-plataforma">¿Eres cliente? Ingresa con el enlace que te compartió tu negocio para crear tu cuenta.</p>
+        <p class="form-error" role="alert"></p>
       </form>
 
-      <form id="register-form" class="auth-form hidden" autocomplete="off">
-        <div class="field-row">
-          <div class="field-group"><label for="register-name">Nombre</label><input type="text" id="register-name" required></div>
-          <div class="field-group"><label for="register-lastname">Apellido</label><input type="text" id="register-lastname" required></div>
+      <!-- Registro de cliente -->
+      <form id="vista-registro" class="auth-form hidden" novalidate>
+        <div class="field-row two">
+          <div class="field-group"><label for="registro-nombre">Nombre</label><input type="text" id="registro-nombre" autocomplete="given-name" required></div>
+          <div class="field-group"><label for="registro-apellido">Apellido</label><input type="text" id="registro-apellido" autocomplete="family-name" required></div>
         </div>
-        <div class="field-group"><label for="register-phone">Numero celular</label><input type="tel" id="register-phone" required></div>
-        <div class="field-group"><label for="register-email">Correo</label><input type="email" id="register-email" required></div>
-        <div class="field-group"><label for="register-password">Contrasena</label><input type="password" id="register-password" minlength="4" required></div>
-        <div class="field-group"><label for="register-birthday">Fecha cumpleanos</label><input type="date" id="register-birthday" required></div>
-        <button class="primary-button" type="submit">Registrarme</button>
-        <button class="secondary-button" type="button" id="cancel-register-button">Volver</button>
-        <p class="form-error" id="register-error"></p>
+        <div class="field-group"><label for="registro-telefono">Celular</label><input type="tel" id="registro-telefono" autocomplete="tel" inputmode="numeric" pattern="[0-9]{10}" placeholder="3001234567" required></div>
+        <div class="field-group"><label for="registro-correo">Correo</label><input type="email" id="registro-correo" autocomplete="email" inputmode="email" required></div>
+        <div class="field-group"><label for="registro-clave">Contraseña</label><input type="password" id="registro-clave" autocomplete="new-password" minlength="8" required><small class="auth-hint">Mínimo 8 caracteres, con letras y números.</small></div>
+        <div class="field-group"><label for="registro-nacimiento">Fecha de nacimiento (opcional)</label><input type="date" id="registro-nacimiento" autocomplete="bday"></div>
+        <label class="check-field auth-check"><input type="checkbox" id="registro-acepta" required> <span>Autorizo el tratamiento de mis datos personales para gestionar mis citas, conforme a la Ley 1581 de 2012.</span></label>
+        <button class="primary-button" type="submit">Crear mi cuenta</button>
+        <button class="secondary-button" type="button" data-ir="vista-login">Ya tengo cuenta</button>
+        <p class="form-error" role="alert"></p>
       </form>
 
-      <div class="demo-access">
-        <p><strong>usuario</strong> / user123</p>
-        <p><strong>jefe</strong> / jefe123</p>
-        <p><strong>empleado</strong> / empleado123</p>
-        <p><strong>admin</strong> / admin123</p>
-      </div>
+      <!-- Recuperar contraseña -->
+      <form id="vista-recuperar" class="auth-form hidden" novalidate>
+        <p class="auth-note">Escribe tu correo y te enviaremos un enlace para crear una nueva contraseña.</p>
+        <div class="field-group"><label for="recuperar-correo">Correo</label><input type="email" id="recuperar-correo" autocomplete="email" required></div>
+        <button class="primary-button" type="submit">Enviar enlace</button>
+        <button class="secondary-button" type="button" data-ir="vista-login">Volver</button>
+        <p class="form-error" role="alert"></p>
+      </form>
+
+      <!-- Nueva contraseña (desde el enlace del correo) -->
+      <form id="vista-nueva-clave" class="auth-form hidden" novalidate>
+        <p class="auth-note">Crea tu nueva contraseña.</p>
+        <div class="field-group"><label for="nueva-clave">Nueva contraseña</label><input type="password" id="nueva-clave" autocomplete="new-password" minlength="8" required></div>
+        <div class="field-group"><label for="nueva-clave-2">Repite la contraseña</label><input type="password" id="nueva-clave-2" autocomplete="new-password" minlength="8" required></div>
+        <button class="primary-button" type="submit">Guardar contraseña</button>
+        <p class="form-error" role="alert"></p>
+      </form>
+
+      <!-- Selector de empresa -->
+      <section id="vista-selector" class="auth-form hidden" aria-label="Elige una empresa">
+        <p class="auth-note">Tienes acceso a varias empresas. ¿A cuál quieres entrar?</p>
+        <div class="empresa-lista" id="empresa-lista"></div>
+        <button class="secondary-button" type="button" data-accion="salir">Cerrar sesión</button>
+      </section>
+
+      <!-- Mensajes de estado -->
+      <section id="vista-mensaje" class="auth-form hidden" aria-live="polite">
+        <p class="auth-message" id="mensaje-texto"></p>
+        <label class="check-field auth-check hidden" id="mensaje-acepta-campo"><input type="checkbox" id="mensaje-acepta"> <span>Autorizo el tratamiento de mis datos personales para gestionar mis citas, conforme a la Ley 1581 de 2012.</span></label>
+        <button class="primary-button hidden" type="button" id="mensaje-accion"></button>
+        <button class="secondary-button" type="button" id="mensaje-secundaria">Volver</button>
+        <p class="form-error" role="alert"></p>
+      </section>
+
+      <p class="powered-by">Con tecnología de CristaSpa</p>
     </section>
   </main>
 
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
-
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="compartido/js/data-store.js"></script>
-  <script src="compartido/js/auth.js"></script>
-  <script src="compartido/js/ui.js"></script>
-  <script src="JavaScript/app.js"></script>
 </body>
 </html>

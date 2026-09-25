@@ -1,4 +1,4 @@
-/* Estilos especificos de la vista del usuario final. */
+/* CristaSpa - estilos del módulo del cliente. */
 .user-appointment-card {
   position: relative;
   padding: 14px;
@@ -23,8 +23,8 @@
   min-width: 64px;
   padding: 8px;
   border-radius: 10px;
-  background: var(--teal);
-  color: var(--white);
+  background: var(--brand-primary);
+  color: var(--brand-on-primary);
   text-align: center;
 }
 
@@ -47,7 +47,7 @@
 .product-price,
 .service-price {
   margin: 10px 0 0;
-  color: var(--gold);
+  color: var(--brand-accent);
   font-size: 1rem;
   font-weight: 800;
 }
@@ -55,7 +55,7 @@
 .booking-service-summary {
   padding: 12px;
   border-radius: var(--radius-sm);
-  background: rgba(23, 80, 80, 0.08);
+  background: color-mix(in srgb, var(--brand-primary) 8%, transparent);
 }
 
 .booking-service-summary strong {
@@ -113,15 +113,15 @@
 }
 
 .day-pill:hover:not(.active) {
-  border-color: var(--gold);
-  background: rgba(201, 160, 32, 0.05);
+  border-color: var(--brand-accent);
+  background: color-mix(in srgb, var(--brand-accent) 5%, transparent);
 }
 
 .day-pill.active {
-  border-color: var(--teal);
-  background: var(--teal);
-  color: var(--white);
-  box-shadow: 0 4px 12px rgba(23, 80, 80, 0.24);
+  border-color: var(--brand-primary);
+  background: var(--brand-primary);
+  color: var(--brand-on-primary);
+  box-shadow: 0 4px 12px color-mix(in srgb, var(--brand-primary) 24%, transparent);
 }
 
 .day-pill-weekday {
@@ -164,7 +164,7 @@
   border: 1px solid var(--line);
   border-radius: var(--radius-sm);
   background: var(--surface-soft);
-  color: var(--teal);
+  color: var(--brand-primary);
   font-size: 0.82rem;
   font-weight: 700;
   cursor: pointer;
@@ -172,15 +172,15 @@
 }
 
 .hours-grid .availability-slot:hover:not(.occupied):not(.selected) {
-  border-color: var(--teal);
-  background: rgba(23, 80, 80, 0.05);
+  border-color: var(--brand-primary);
+  background: color-mix(in srgb, var(--brand-primary) 5%, transparent);
 }
 
 .hours-grid .availability-slot.selected {
-  border-color: var(--gold);
-  background: var(--gold);
-  color: var(--white);
-  box-shadow: 0 4px 10px rgba(201, 160, 32, 0.28);
+  border-color: var(--brand-accent);
+  background: var(--brand-accent);
+  color: var(--brand-on-accent);
+  box-shadow: 0 4px 10px color-mix(in srgb, var(--brand-accent) 28%, transparent);
 }
 
 .hours-grid .availability-slot.occupied,
@@ -190,4 +190,119 @@
   border-color: transparent;
   cursor: not-allowed;
   opacity: 0.5;
+}
+
+/* ---------------------------------------------------------------------------
+   v2: reserva de varios servicios, contacto y estados
+   --------------------------------------------------------------------------- */
+
+.subsection-title {
+  margin: 22px 0 10px;
+  font-family: var(--font-title);
+  font-size: 1.15rem;
+}
+
+.filtro-categorias {
+  margin-bottom: 14px;
+}
+
+.service-card.seleccionado {
+  outline: 3px solid var(--brand-accent);
+  outline-offset: -3px;
+}
+
+.service-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.service-meta .service-price {
+  margin: 0;
+}
+
+.seleccion-barra {
+  position: fixed;
+  left: 50%;
+  bottom: 0;
+  z-index: 40;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: min(100%, 480px);
+  padding: 12px 16px calc(12px + env(safe-area-inset-bottom));
+  transform: translateX(-50%);
+  background: var(--brand-surface-dark);
+  color: var(--white);
+  box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.18);
+}
+
+.seleccion-barra strong {
+  display: block;
+  font-size: 0.95rem;
+}
+
+.seleccion-barra span {
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 0.78rem;
+}
+
+.seleccion-barra .primary-button {
+  width: auto;
+  flex: 0 0 auto;
+  background: var(--brand-accent);
+  color: var(--brand-on-accent);
+}
+
+body.con-barra .mobile-content {
+  padding-bottom: 96px;
+}
+
+.day-pill:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.hours-grid .availability-slot.selected {
+  color: var(--brand-on-accent);
+}
+
+.contacto-empresa {
+  display: grid;
+  gap: 8px;
+  margin-top: 22px;
+}
+
+.contacto-empresa a {
+  text-decoration: none;
+}
+
+.cita-acciones {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.cita-acciones button {
+  min-height: 38px;
+  font-size: 0.7rem;
+}
+
+.lista-citas {
+  margin-top: 14px;
+}
+
+.field-row.two {
+  grid-template-columns: 1fr 1fr;
+}
+
+@media (max-width: 360px) {
+  .field-row.two,
+  .cita-acciones {
+    grid-template-columns: 1fr;
+  }
 }

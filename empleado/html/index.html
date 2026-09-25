@@ -2,59 +2,96 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <meta name="theme-color" content="#071a1a">
-  <title>Maison Lash - Empleado</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#175050">
+  <title>CristaSpa</title>
   <link rel="stylesheet" href="../../compartido/css/base.css">
   <link rel="stylesheet" href="../css/empleado.css">
+  <script type="module" src="../js/empleado.js"></script>
 </head>
 <body>
   <main class="mobile-shell">
     <header class="app-header">
-      <div class="brand-block">
-        <p class="brand-kicker">Empleado</p>
-        <h1 class="brand-name">MAISON LASH</h1>
+      <div class="brand-row">
+        <div data-marca-logo></div>
+        <div class="brand-block">
+          <p class="brand-kicker">Especialista</p>
+          <h1 class="brand-name" data-marca-nombre>CristaSpa</h1>
+        </div>
       </div>
       <div class="header-actions">
-        <span class="role-pill" id="employee-name-pill">Agenda</span>
-        <button class="icon-button" id="logout-button" type="button" aria-label="Cerrar sesion">Salir</button>
+        <button class="icon-button" id="cerrar-sesion" type="button" aria-label="Cerrar sesión" title="Cerrar sesión">⎋</button>
       </div>
     </header>
 
     <section class="employee-hero">
-      <p class="section-kicker">Calendario</p>
-      <h2 class="section-title" id="employee-title">Mis citas</h2>
-      <div class="employee-summary" id="employee-summary"></div>
+      <p class="section-kicker">Mi agenda</p>
+      <h2 class="section-title" id="empleado-nombre">Mis citas</h2>
+      <div class="employee-summary" id="resumen"></div>
     </section>
 
-    <section class="employee-filters">
-      <div class="field-group">
-        <label for="filter-date">Fecha</label>
-        <input type="date" id="filter-date">
-      </div>
-      <div class="field-group">
-        <label for="filter-status">Estado</label>
-        <select id="filter-status">
-          <option value="all">Todos</option>
-          <option value="pendiente">Pendiente</option>
-          <option value="confirmada">Confirmada</option>
-          <option value="completada">Completada</option>
-          <option value="cancelada">Cancelada</option>
-        </select>
-      </div>
-    </section>
+    <nav class="segment-scroll" aria-label="Menú del especialista" id="navegacion">
+      <button class="segment-button active" type="button" data-view="vista-agenda">Agenda</button>
+      <button class="segment-button" type="button" data-view="vista-ausencias">Ausencias</button>
+      <button class="segment-button" type="button" data-view="vista-cuenta">Cuenta</button>
+    </nav>
 
     <section class="mobile-content employee-content">
-      <div class="stack-list" id="employee-appointments-list"></div>
+      <div id="vista-agenda" class="view active">
+        <div class="agenda-controles">
+          <button class="icon-button oscuro" type="button" id="dia-anterior" aria-label="Día anterior">‹</button>
+          <button class="fecha-actual" type="button" id="ir-hoy" title="Ir a hoy"><span id="fecha-titulo"></span></button>
+          <button class="icon-button oscuro" type="button" id="dia-siguiente" aria-label="Día siguiente">›</button>
+        </div>
+        <div class="chip-list agenda-filtros">
+          <button class="chip-option active" type="button" data-rango="dia">Día</button>
+          <button class="chip-option" type="button" data-rango="semana">Semana</button>
+          <select id="filtro-estado" aria-label="Filtrar por estado">
+            <option value="">Todas</option>
+            <option value="pendiente">Pendientes</option>
+            <option value="confirmada">Confirmadas</option>
+            <option value="completada">Realizadas</option>
+            <option value="no_asistio">No asistió</option>
+            <option value="cancelada">Canceladas</option>
+          </select>
+        </div>
+        <div class="stack-list" id="lista-citas"></div>
+      </div>
+
+      <div id="vista-ausencias" class="view">
+        <p class="section-kicker">Agenda</p>
+        <h2 class="section-title">Mis ausencias</h2>
+        <p class="section-note">Bloquea tu agenda por vacaciones, citas médicas o cualquier ausencia. Nadie podrá reservarte en ese tiempo.</p>
+        <form class="form-card" id="form-ausencia" novalidate>
+          <div class="field-row two">
+            <div class="field-group"><label for="ausencia-desde">Desde</label><input type="date" id="ausencia-desde" required></div>
+            <div class="field-group"><label for="ausencia-hora-desde">Hora</label><input type="time" id="ausencia-hora-desde" value="00:00" required></div>
+          </div>
+          <div class="field-row two">
+            <div class="field-group"><label for="ausencia-hasta">Hasta</label><input type="date" id="ausencia-hasta" required></div>
+            <div class="field-group"><label for="ausencia-hora-hasta">Hora</label><input type="time" id="ausencia-hora-hasta" value="23:59" required></div>
+          </div>
+          <div class="field-group"><label for="ausencia-motivo">Motivo</label><input id="ausencia-motivo" maxlength="120" placeholder="Vacaciones, cita médica…" required></div>
+          <button class="primary-button" type="submit">Bloquear agenda</button>
+        </form>
+        <div class="stack-list lista-ausencias" id="lista-ausencias"></div>
+      </div>
+
+      <div id="vista-cuenta" class="view">
+        <p class="section-kicker">Cuenta</p>
+        <h2 class="section-title">Mi cuenta</h2>
+        <form class="form-card" id="form-clave" novalidate>
+          <h3 class="form-title">Cambiar contraseña</h3>
+          <div class="field-group"><label for="clave-nueva">Nueva contraseña</label><input id="clave-nueva" type="password" minlength="8" autocomplete="new-password" required></div>
+          <button class="secondary-button" type="submit">Actualizar contraseña</button>
+        </form>
+        <div class="form-card">
+          <button class="secondary-button" type="button" id="cerrar-sesion-2">Cerrar sesión</button>
+        </div>
+      </div>
     </section>
   </main>
 
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
-
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="../../compartido/js/data-store.js"></script>
-  <script src="../../compartido/js/auth.js"></script>
-  <script src="../../compartido/js/ui.js"></script>
-  <script src="../js/empleado.js"></script>
 </body>
 </html>

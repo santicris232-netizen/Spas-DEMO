@@ -1,0 +1,167 @@
+/* CristaSpa - pantalla de acceso. Los colores salen de la marca de la empresa (base.css). */
+.auth-page {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  max-width: 480px;
+  min-height: 100dvh;
+  margin: 0 auto;
+  padding: 20px;
+  background:
+    radial-gradient(circle at 50% 0%, color-mix(in srgb, var(--brand-accent) 16%, transparent), transparent 34%),
+    linear-gradient(160deg, var(--brand-surface-dark), var(--brand-surface-dark-2) 45%, var(--brand-primary));
+}
+
+.auth-card {
+  display: grid;
+  gap: 20px;
+  width: 100%;
+  padding: 28px 18px 18px;
+  border: 1px solid color-mix(in srgb, var(--brand-accent) 24%, transparent);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.06);
+  box-shadow: 0 20px 48px rgba(0, 0, 0, 0.28);
+}
+
+.auth-brand {
+  display: grid;
+  justify-items: center;
+  gap: 8px;
+  text-align: center;
+}
+
+.auth-logo .brand-logo {
+  width: 64px;
+  height: 64px;
+  border-radius: 16px;
+  font-size: 1.2rem;
+}
+
+.auth-brand .brand-name {
+  display: block;
+  color: var(--brand-accent-soft);
+  font-size: clamp(1.2rem, 7vw, 1.7rem);
+  white-space: normal;
+}
+
+.auth-subtitle,
+.auth-note,
+.auth-message {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.78);
+  font-size: 0.88rem;
+  text-align: center;
+}
+
+.auth-message {
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.auth-loading {
+  color: rgba(255, 255, 255, 0.7);
+  text-align: center;
+}
+
+.auth-form {
+  display: grid;
+  gap: 12px;
+}
+
+.auth-form .field-group label {
+  color: var(--brand-accent-strong);
+}
+
+.auth-form input {
+  border-color: color-mix(in srgb, var(--brand-accent) 24%, transparent);
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--white);
+}
+
+.auth-form input:focus {
+  border-color: var(--brand-accent-strong);
+}
+
+.auth-form input[type='date'] {
+  color-scheme: dark;
+}
+
+.auth-form .secondary-button {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--brand-accent-soft);
+}
+
+.auth-hint {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.74rem;
+}
+
+.auth-check {
+  color: rgba(255, 255, 255, 0.78);
+  font-size: 0.8rem;
+}
+
+.auth-link {
+  justify-self: center;
+  color: var(--brand-accent-soft);
+}
+
+.field-row.two {
+  grid-template-columns: 1fr 1fr;
+}
+
+.empresa-lista {
+  display: grid;
+  gap: 10px;
+}
+
+.empresa-opcion {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 12px;
+  border: 1px solid color-mix(in srgb, var(--brand-accent) 24%, transparent);
+  border-radius: var(--radius-sm);
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--white);
+  text-align: left;
+  cursor: pointer;
+}
+
+.empresa-opcion strong {
+  display: block;
+  font-size: 0.95rem;
+}
+
+.empresa-opcion span {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.76rem;
+}
+
+.form-error {
+  display: none;
+  margin: 0;
+  padding: 10px;
+  border: 1px solid rgba(181, 69, 69, 0.4);
+  border-radius: var(--radius-sm);
+  background: rgba(181, 69, 69, 0.14);
+  color: #ffd2d2;
+  font-size: 0.85rem;
+  text-align: center;
+}
+
+.form-error.active {
+  display: block;
+}
+
+body.modo-plataforma .solo-empresa,
+body:not(.modo-plataforma) .solo-plataforma {
+  display: none;
+}
+
+@media (max-width: 360px) {
+  .field-row.two {
+    grid-template-columns: 1fr;
+  }
+}
