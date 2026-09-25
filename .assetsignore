@@ -1,7 +1,15 @@
 .git
 .gitignore
+.github
 .gemini
 .agents
 AGENTS.md
 README.md
 wrangler.toml
+package.json
+package-lock.json
+node_modules
+docs
+scripts
+supabase
+tests
