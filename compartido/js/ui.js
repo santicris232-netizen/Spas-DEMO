@@ -166,6 +166,10 @@
           canvas.width = width;
           canvas.height = height;
           const ctx = canvas.getContext('2d');
+          if (!ctx) {
+            reject(new Error('No se pudo procesar la imagen.'));
+            return;
+          }
           ctx.drawImage(img, 0, 0, width, height);
 
           // Comprimir en WebP a 70% de calidad
