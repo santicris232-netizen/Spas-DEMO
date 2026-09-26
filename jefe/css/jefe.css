@@ -1,4 +1,4 @@
-/* Estilos especificos del panel movil del jefe. */
+/* CristaSpa - estilos del módulo del jefe y de recepción. */
 .boss-content {
   display: grid;
   gap: 14px;
@@ -33,7 +33,7 @@
 }
 
 .management-price {
-  color: var(--gold);
+  color: var(--brand-accent);
   font-weight: 900;
   white-space: nowrap;
 }
@@ -44,7 +44,7 @@
   padding: 10px;
   border: 1px solid var(--line);
   border-radius: var(--radius-sm);
-  background: rgba(23, 80, 80, 0.05);
+  background: color-mix(in srgb, var(--brand-primary) 5%, transparent);
 }
 
 .toggle-field label {
@@ -79,7 +79,7 @@
   background: var(--surface-soft);
   color: var(--text);
   text-align: left;
-  box-shadow: 0 8px 24px rgba(12, 36, 36, 0.06);
+  box-shadow: 0 8px 24px color-mix(in srgb, var(--brand-surface-dark) 6%, transparent);
 }
 
 .export-card strong {
@@ -133,4 +133,273 @@
   .filter-row {
     grid-template-columns: 1fr;
   }
+}
+
+/* ---------------------------------------------------------------------------
+   v2: agenda, formularios en hoja, checklist, catálogo, equipo y reportes
+   --------------------------------------------------------------------------- */
+
+body.modo-recepcion .solo-jefe {
+  display: none !important;
+}
+
+.agenda-controles {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 10px;
+}
+
+.icon-button.oscuro {
+  background: color-mix(in srgb, var(--brand-primary) 10%, transparent);
+  color: var(--brand-primary);
+  font-size: 1.3rem;
+}
+
+.fecha-actual {
+  min-height: 40px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--surface-soft);
+  color: var(--text);
+  font-family: var(--font-title);
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.agenda-filtros select {
+  width: auto;
+  min-height: 36px;
+  padding: 0 10px;
+  border-radius: 999px;
+  font-size: 0.78rem;
+}
+
+.busqueda {
+  min-height: 40px;
+}
+
+.acciones-fila {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.dia-separador {
+  margin: 10px 0 0;
+  color: var(--text-soft);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.management-card .card-meta a {
+  color: inherit;
+}
+
+.management-card.inactivo {
+  opacity: 0.6;
+}
+
+.management-card img.miniatura {
+  width: 56px;
+  height: 56px;
+  border-radius: 10px;
+  object-fit: cover;
+}
+
+.fila-miniatura {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.checklist {
+  padding: 14px;
+  border: 1px solid color-mix(in srgb, var(--brand-accent) 40%, transparent);
+  border-radius: var(--radius);
+  background: color-mix(in srgb, var(--brand-accent) 8%, var(--surface-soft));
+}
+
+.checklist h3 {
+  margin: 0 0 8px;
+  font-family: var(--font-title);
+}
+
+.checklist ul {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 0.86rem;
+}
+
+.checklist li.hecho {
+  color: var(--success);
+  text-decoration: line-through;
+}
+
+.cliente-resultados {
+  display: grid;
+  gap: 6px;
+  max-height: 220px;
+  overflow-y: auto;
+}
+
+.cliente-opcion {
+  display: grid;
+  gap: 2px;
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: var(--surface-soft);
+  color: var(--text);
+  text-align: left;
+  cursor: pointer;
+}
+
+.cliente-opcion.active {
+  border-color: var(--brand-primary);
+  background: color-mix(in srgb, var(--brand-primary) 10%, transparent);
+}
+
+.cliente-opcion small {
+  color: var(--text-soft);
+}
+
+.servicios-seleccion {
+  display: grid;
+  gap: 6px;
+  max-height: 260px;
+  overflow-y: auto;
+}
+
+.servicios-seleccion .chip-option {
+  justify-content: space-between;
+  border-radius: var(--radius-sm);
+}
+
+.horario-dia {
+  display: grid;
+  gap: 8px;
+  padding: 10px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: var(--surface-soft);
+}
+
+.horario-dia header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-weight: 800;
+  font-size: 0.84rem;
+}
+
+.horario-franja {
+  display: grid;
+  grid-template-columns: 1fr 1fr auto;
+  gap: 8px;
+  align-items: center;
+}
+
+.horario-franja button,
+.horario-dia header button {
+  width: auto;
+  min-height: 34px;
+  padding: 0 10px;
+}
+
+.color-fila {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.color-fila input[type='color'] {
+  min-height: 44px;
+  padding: 4px;
+}
+
+.aviso {
+  padding: 10px;
+  border-radius: var(--radius-sm);
+  background: color-mix(in srgb, var(--warning) 12%, transparent);
+  color: var(--warning);
+  font-size: 0.82rem;
+}
+
+.qr-enlace {
+  display: grid;
+  justify-items: center;
+  gap: 10px;
+}
+
+.qr-enlace img {
+  width: 180px;
+  height: 180px;
+  border-radius: var(--radius-sm);
+  background: var(--white);
+}
+
+.enlace-empresa {
+  width: 100%;
+  font-size: 0.8rem;
+}
+
+.barra-metrica {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 6px;
+  align-items: center;
+  font-size: 0.86rem;
+}
+
+.barra-metrica .barra {
+  grid-column: 1 / -1;
+  height: 8px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--brand-primary) 12%, transparent);
+  overflow: hidden;
+}
+
+.barra-metrica .barra span {
+  display: block;
+  height: 100%;
+  border-radius: 999px;
+  background: var(--brand-primary);
+}
+
+.auditoria-item {
+  padding: 8px 0;
+  border-bottom: 1px solid var(--line);
+  font-size: 0.8rem;
+}
+
+.auditoria-item strong {
+  font-size: 0.82rem;
+}
+
+.field-row.two,
+.field-row.tres {
+  grid-template-columns: 1fr 1fr;
+}
+
+@media (max-width: 360px) {
+  .field-row.two,
+  .field-row.tres,
+  .acciones-fila,
+  .color-fila {
+    grid-template-columns: 1fr;
+  }
+}
+
+.cliente-tarjeta {
+  width: 100%;
+  color: var(--text);
+  text-align: left;
+  cursor: pointer;
 }

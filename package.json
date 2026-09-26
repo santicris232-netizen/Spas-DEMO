@@ -1,0 +1,27 @@
+{
+  "name": "cristaspa",
+  "version": "2.0.0-dev",
+  "private": true,
+  "description": "CristaSpa: plataforma multiempresa de reservas para negocios de belleza y bienestar.",
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "dev": "node scripts/servidor-local.mjs",
+    "test": "npm run test:unit && npm run test:db",
+    "test:unit": "node --test \"tests/unit/*.test.mjs\"",
+    "test:db": "node --test \"tests/db/*.test.mjs\"",
+    "test:e2e": "playwright test",
+    "check:secrets": "node scripts/check-secrets.mjs",
+    "seed:dev": "node scripts/seed-dev.mjs",
+    "db:push": "supabase db push",
+    "db:new": "supabase migration new",
+    "functions:deploy": "supabase functions deploy --use-api"
+  },
+  "devDependencies": {
+    "@electric-sql/pglite": "^0.5.8",
+    "@playwright/test": "^1.63.0",
+    "supabase": "^2.118.0"
+  }
+}

@@ -1,229 +1,334 @@
 /*
-  Maison Lash - utilidades visuales compartidas.
-  Agrupa formato de fechas, escape de HTML, lectura de imagenes y mensajes.
+  CristaSpa - utilidades de interfaz compartidas.
+  Escape de HTML (protección XSS), mensajes, formato de moneda, imágenes, hojas
+  inferiores, pestañas, CSV y archivos .ics. No accede a datos.
 */
-(function () {
-  'use strict';
 
-  let toastTimer = null;
+let temporizadorToast = null;
 
-  /**
-   * Escapa texto para inyectarlo de forma segura en HTML.
-   * @param {unknown} value Valor de entrada.
-   * @returns {string} Texto escapado.
-   */
-  function escapeHTML(value) {
-    return String(value || '')
-      .replace(/&/g, '&amp;')
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;')
-      .replace(/"/g, '&quot;')
-      .replace(/'/g, '&#039;');
+/**
+ * Escapa texto para insertarlo en HTML.
+ * @param {unknown} valor Valor.
+ * @returns {string} Texto seguro.
+ */
+export function esc(valor) {
+  return String(valor ?? '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;')
+    .replace(/`/g, '&#096;');
+}
+
+/**
+ * Plantilla etiquetada que escapa todas las interpolaciones.
+ * Usar `crudo(html)` para insertar HTML ya escapado.
+ * @example html`<p>${nombre}</p>`
+ * @returns {string} HTML seguro.
+ */
+export function html(partes, ...valores) {
+  return partes.reduce((acumulado, parte, indice) => {
+    if (indice === 0) {
+      return parte;
+    }
+    const valor = valores[indice - 1];
+    const texto = valor && valor.__crudo ? valor.valor
+      : Array.isArray(valor) ? valor.map(item => (item && item.__crudo ? item.valor : esc(item))).join('')
+        : esc(valor);
+    return acumulado + texto + parte;
+  }, '');
+}
+
+/**
+ * Marca HTML ya seguro para no volver a escaparlo dentro de html``.
+ * @param {string} valor HTML confiable (generado con html``).
+ * @returns {{__crudo: true, valor: string}} Marcador.
+ */
+export function crudo(valor) {
+  return { __crudo: true, valor };
+}
+
+/**
+ * Muestra un mensaje flotante breve.
+ * @param {string} mensaje Texto.
+ */
+export function toast(mensaje) {
+  const elemento = document.getElementById('toast');
+  if (!elemento) {
+    return;
   }
+  elemento.textContent = mensaje;
+  elemento.classList.add('active');
+  clearTimeout(temporizadorToast);
+  temporizadorToast = setTimeout(() => elemento.classList.remove('active'), 3200);
+}
 
-  /**
-   * Escapa texto para atributos HTML.
-   * @param {unknown} value Valor de entrada.
-   * @returns {string} Texto escapado.
-   */
-  function escapeAttr(value) {
-    return escapeHTML(value).replace(/`/g, '&#096;');
+/**
+ * Muestra un error al usuario y lo registra en consola.
+ * @param {Error & {codigo?: string, original?: unknown}} error Error (idealmente ErrorApp).
+ */
+export function mostrarError(error) {
+  console.error(error?.original || error);
+  toast(error?.message || 'Ocurrió un error inesperado.');
+}
+
+/**
+ * Formatea dinero según la moneda de la empresa.
+ * @param {number|string|null} valor Monto.
+ * @param {string} [moneda] Código ISO (COP por defecto).
+ * @returns {string} Texto, o "Precio por confirmar" si no hay valor.
+ */
+export function dinero(valor, moneda = 'COP') {
+  if (valor === null || valor === undefined || valor === '') {
+    return 'Precio por confirmar';
   }
+  return new Intl.NumberFormat('es-CO', {
+    style: 'currency', currency: moneda, maximumFractionDigits: moneda === 'COP' ? 0 : 2
+  }).format(Number(valor));
+}
 
-  /**
-   * Muestra una notificacion flotante.
-   * @param {string} message Mensaje visible.
-   */
-  function showToast(message) {
-    const toast = document.getElementById('toast');
+/**
+ * Convierte texto con separadores ("$80.000") a número.
+ * @param {string} texto Texto del usuario.
+ * @returns {number|null} Número o null si está vacío.
+ */
+export function leerNumero(texto) {
+  const limpio = String(texto ?? '').replace(/[^\d,]/g, '').replace(',', '.');
+  return limpio ? Number(limpio) : null;
+}
 
-    if (!toast) {
+/**
+ * Iniciales de un nombre (máximo 2).
+ * @param {string} nombre Nombre.
+ * @returns {string} Iniciales.
+ */
+export function iniciales(nombre) {
+  return String(nombre || '?').trim().split(/\s+/).slice(0, 2).map(palabra => palabra[0]).join('').toUpperCase();
+}
+
+/**
+ * Imagen o bloque de respaldo con iniciales.
+ * @param {string} url URL pública.
+ * @param {string} titulo Texto alternativo.
+ * @returns {string} HTML.
+ */
+export function imagen(url, titulo) {
+  if (url) {
+    return html`<img class="visual-image" src="${url}" alt="${titulo}" loading="lazy">`;
+  }
+  return html`<div class="image-fallback" role="img" aria-label="${titulo}">${iniciales(titulo)}</div>`;
+}
+
+/**
+ * Reduce una imagen a WebP (máx. 1200 px, calidad 0.82) antes de subirla.
+ * @param {File} archivo Imagen seleccionada.
+ * @returns {Promise<Blob>} Imagen comprimida.
+ */
+export async function comprimirImagen(archivo) {
+  if (!archivo || !archivo.type.startsWith('image/')) {
+    throw new Error('Selecciona una imagen válida.');
+  }
+  if (archivo.size > 10 * 1024 * 1024) {
+    throw new Error('La imagen no puede superar 10 MB.');
+  }
+  const mapa = await createImageBitmap(archivo);
+  const escala = Math.min(1, 1200 / Math.max(mapa.width, mapa.height));
+  const lienzo = document.createElement('canvas');
+  lienzo.width = Math.round(mapa.width * escala);
+  lienzo.height = Math.round(mapa.height * escala);
+  lienzo.getContext('2d').drawImage(mapa, 0, 0, lienzo.width, lienzo.height);
+  const blob = await new Promise(resolve => lienzo.toBlob(resolve, 'image/webp', 0.82));
+  if (!blob) {
+    throw new Error('No se pudo procesar la imagen.');
+  }
+  if (blob.size > 2 * 1024 * 1024) {
+    throw new Error('La imagen sigue siendo muy pesada. Usa una más pequeña.');
+  }
+  return blob;
+}
+
+/**
+ * Descarga un CSV compatible con Excel (UTF-8 con BOM, separador punto y coma).
+ * @param {string} nombre Nombre del archivo.
+ * @param {Array<Array<unknown>>} filas Filas (la primera es el encabezado).
+ */
+export function descargarCsv(nombre, filas) {
+  const contenido = filas
+    .map(fila => fila.map(celda => `"${String(celda ?? '').replace(/"/g, '""')}"`).join(';'))
+    .join('\r\n');
+  descargar(nombre, new Blob(['﻿', contenido], { type: 'text/csv;charset=utf-8' }));
+}
+
+/**
+ * Descarga un Blob como archivo.
+ * @param {string} nombre Nombre del archivo.
+ * @param {Blob} blob Contenido.
+ */
+export function descargar(nombre, blob) {
+  const url = URL.createObjectURL(blob);
+  const enlace = document.createElement('a');
+  enlace.href = url;
+  enlace.download = nombre;
+  enlace.click();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+
+/**
+ * Genera un archivo .ics para agregar una cita al calendario del teléfono.
+ * @param {{id: string, inicio: string, fin: string, titulo: string, descripcion: string, lugar?: string}} evento Datos.
+ * @returns {Blob} Archivo de calendario.
+ */
+export function crearIcs(evento) {
+  const formato = fecha => new Date(fecha).toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '');
+  const limpiar = texto => String(texto || '').replace(/[\\;,]/g, caracter => `\\${caracter}`).replace(/\n/g, '\\n');
+  const lineas = [
+    'BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//CristaSpa//Citas//ES', 'BEGIN:VEVENT',
+    `UID:${evento.id}@cristaspa.app`, `DTSTAMP:${formato(new Date())}`,
+    `DTSTART:${formato(evento.inicio)}`, `DTEND:${formato(evento.fin)}`,
+    `SUMMARY:${limpiar(evento.titulo)}`, `DESCRIPTION:${limpiar(evento.descripcion)}`,
+    evento.lugar ? `LOCATION:${limpiar(evento.lugar)}` : null,
+    'END:VEVENT', 'END:VCALENDAR'
+  ].filter(Boolean);
+  return new Blob([lineas.join('\r\n')], { type: 'text/calendar;charset=utf-8' });
+}
+
+/**
+ * Activa una navegación por pestañas (.segment-button[data-view] → .view).
+ * @param {HTMLElement} nav Contenedor de botones.
+ * @param {(vista: string) => void} [alCambiar] Se llama con el id de la vista activa.
+ */
+export function activarPestanas(nav, alCambiar) {
+  nav.addEventListener('click', evento => {
+    const boton = evento.target.closest('[data-view]');
+    if (!boton || boton.classList.contains('hidden')) {
       return;
     }
+    mostrarVista(nav, boton.dataset.view);
+    alCambiar?.(boton.dataset.view);
+  });
+}
 
-    toast.textContent = message;
-    toast.classList.add('active');
-    clearTimeout(toastTimer);
-    toastTimer = setTimeout(() => toast.classList.remove('active'), 2800);
-  }
+/**
+ * Muestra una vista y marca su pestaña.
+ * @param {HTMLElement} nav Contenedor de pestañas.
+ * @param {string} vista Id de la vista.
+ */
+export function mostrarVista(nav, vista) {
+  nav.querySelectorAll('[data-view]').forEach(item => item.classList.toggle('active', item.dataset.view === vista));
+  document.querySelectorAll('.view').forEach(item => item.classList.toggle('active', item.id === vista));
+  window.scrollTo({ top: 0 });
+}
 
-  /**
-   * Da formato corto a una fecha ISO.
-   * @param {string} value Fecha ISO.
-   * @returns {string} Fecha para interfaz.
-   */
-  function formatDate(value) {
-    if (!value) {
-      return 'Sin fecha';
+/**
+ * Abre una hoja inferior (.sheet-backdrop).
+ * @param {string} id Id del contenedor.
+ */
+export function abrirHoja(id) {
+  const hoja = document.getElementById(id);
+  hoja.classList.add('active');
+  hoja.setAttribute('aria-hidden', 'false');
+  hoja.querySelector('input, select, textarea, button')?.focus({ preventScroll: true });
+}
+
+/**
+ * Cierra una hoja inferior.
+ * @param {string} id Id del contenedor.
+ */
+export function cerrarHoja(id) {
+  const hoja = document.getElementById(id);
+  hoja.classList.remove('active');
+  hoja.setAttribute('aria-hidden', 'true');
+}
+
+/**
+ * Conecta el cierre de una hoja: botón [data-cerrar-hoja], clic en el fondo y tecla Escape.
+ * @param {string} id Id del contenedor.
+ */
+export function prepararHoja(id) {
+  const hoja = document.getElementById(id);
+  hoja.addEventListener('click', evento => {
+    if (evento.target === hoja || evento.target.closest('[data-cerrar-hoja]')) {
+      cerrarHoja(id);
     }
-
-    return new Date(`${value}T00:00:00`).toLocaleDateString('es-CO', {
-      weekday: 'short',
-      day: '2-digit',
-      month: 'short'
-    });
-  }
-
-  /**
-   * Calcula dias faltantes hasta una fecha.
-   * @param {string} value Fecha ISO.
-   * @returns {number} Dias restantes.
-   */
-  function daysUntil(value) {
-    const today = new Date();
-    const target = new Date(`${value}T00:00:00`);
-    today.setHours(0, 0, 0, 0);
-    target.setHours(0, 0, 0, 0);
-    return Math.ceil((target - today) / 86400000);
-  }
-
-  /**
-   * Traduce una categoria interna a etiqueta visible.
-   * @param {string} category Categoria interna.
-   * @returns {string} Etiqueta visible.
-   */
-  function categoryLabel(category) {
-    const labels = {
-      pestanas: 'Pestanas',
-      cejas: 'Cejas',
-      labios: 'Labios'
-    };
-    return labels[category] || 'Servicio';
-  }
-
-  /**
-   * Retorna la clase visual para una cita segun categorias.
-   * @param {Array<string>} categories Categorias de la cita.
-   * @returns {string} Clase CSS.
-   */
-  function appointmentClass(categories) {
-    const values = Array.isArray(categories) ? categories : [];
-
-    if (values.length > 1) {
-      return 'calendar-all';
+  });
+  document.addEventListener('keydown', evento => {
+    if (evento.key === 'Escape' && hoja.classList.contains('active')) {
+      cerrarHoja(id);
     }
+  });
+}
 
-    if (values.includes('cejas')) {
-      return 'calendar-cejas';
-    }
-
-    if (values.includes('labios')) {
-      return 'calendar-labios';
-    }
-
-    if (values.includes('pestanas')) {
-      return 'calendar-pestanas';
-    }
-
-    return 'calendar-all';
+/**
+ * Deshabilita un botón mientras corre una acción, para evitar dobles envíos.
+ * @param {HTMLButtonElement|null} boton Botón.
+ * @param {() => Promise<T>} accion Acción.
+ * @returns {Promise<T|undefined>} Resultado, o undefined si falló (el error ya se mostró).
+ * @template T
+ */
+export async function conCarga(boton, accion) {
+  const textoOriginal = boton?.textContent;
+  if (boton) {
+    boton.disabled = true;
+    boton.textContent = 'Procesando…';
   }
-
-  /**
-   * Convierte una imagen seleccionada a base64.
-   * @param {HTMLInputElement} input Campo file.
-   * @returns {Promise<string>} Imagen en data URL.
-   */
-  function readImageInput(input) {
-    return new Promise((resolve, reject) => {
-      const file = input.files && input.files[0];
-
-      if (!file) {
-        resolve('');
-        return;
-      }
-
-      if (!file.type.startsWith('image/')) {
-        reject(new Error('Selecciona una imagen valida.'));
-        return;
-      }
-
-      if (file.size > 5 * 1024 * 1024) {
-        reject(new Error('La imagen no puede superar 5MB.'));
-        return;
-      }
-
-      const reader = new FileReader();
-      reader.onload = () => resolve(String(reader.result || ''));
-      reader.onerror = () => reject(new Error('No se pudo leer la imagen.'));
-      reader.readAsDataURL(file);
-    });
-  }
-
-  /**
-   * Renderiza una imagen o un bloque de respaldo.
-   * @param {string} image Data URL.
-   * @param {string} title Titulo usado como alt.
-   * @returns {string} HTML de imagen.
-   */
-  function visualImage(image, title) {
-    if (image) {
-      return `<img class="visual-image" src="${escapeAttr(image)}" alt="${escapeAttr(title)}">`;
+  try {
+    return await accion();
+  } catch (error) {
+    mostrarError(error);
+    return undefined;
+  } finally {
+    if (boton) {
+      boton.disabled = false;
+      boton.textContent = textoOriginal;
     }
-
-    return `<div class="image-fallback" aria-label="${escapeAttr(title)}">ML</div>`;
   }
+}
 
-  /**
-   * Descarga un CSV sencillo compatible con Excel.
-   * @param {string} fileName Nombre del archivo.
-   * @param {Array<Array<string>>} rows Filas del archivo.
-   */
-  function downloadCsv(fileName, rows) {
-    const csv = rows.map(row => row.map(cell => `"${String(cell || '').replace(/"/g, '""')}"`).join(',')).join('\n');
-    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = fileName;
-    link.click();
-    URL.revokeObjectURL(url);
+/** HTML de carga (esqueletos). */
+export function esqueletos(cantidad = 3) {
+  return '<div class="skeleton"></div>'.repeat(cantidad);
+}
+
+/** HTML de estado vacío. */
+export function vacio(mensaje) {
+  return html`<div class="empty-state">${mensaje}</div>`;
+}
+
+/**
+ * Muestra una banda de "sin conexión" mientras el dispositivo esté offline.
+ */
+export function vigilarConexion() {
+  const banda = document.createElement('div');
+  banda.className = 'banner banner-offline hidden';
+  banda.setAttribute('role', 'status');
+  banda.textContent = 'Sin conexión: los cambios no se guardarán hasta que vuelvas a tener internet.';
+  document.body.prepend(banda);
+  const actualizar = () => banda.classList.toggle('hidden', navigator.onLine);
+  window.addEventListener('online', actualizar);
+  window.addEventListener('offline', actualizar);
+  actualizar();
+}
+
+/**
+ * Normaliza un número celular colombiano para wa.me (agrega 57 si tiene 10 dígitos).
+ * @param {string} telefono Número.
+ * @returns {string} Solo dígitos con indicativo, o vacío.
+ */
+export function telefonoWhatsapp(telefono) {
+  const digitos = String(telefono || '').replace(/\D/g, '');
+  if (!digitos) {
+    return '';
   }
+  return digitos.length === 10 ? `57${digitos}` : digitos;
+}
 
-  /**
-   * Formatea un valor numerico como pesos colombianos (ej: $80.000).
-   * @param {unknown} value Valor a formatear.
-   * @returns {string} Texto formateado.
-   */
-  function formatCurrency(value) {
-    const clean = String(value || '').replace(/\D/g, '');
-    if (!clean) {
-      return '';
-    }
-    return '$' + clean.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
-  }
-
-  /**
-   * Vincula una mascara de pesos en tiempo real a un input de texto.
-   * @param {string} inputId Id del input.
-   */
-  function bindPriceFormatter(inputId) {
-    const input = document.getElementById(inputId);
-    if (!input) {
-      return;
-    }
-    input.addEventListener('input', event => {
-      const val = event.target.value;
-      const cursor = event.target.selectionStart;
-      const origLen = val.length;
-      const formatted = formatCurrency(val);
-      event.target.value = formatted;
-      const diff = formatted.length - origLen;
-      event.target.setSelectionRange(cursor + diff, cursor + diff);
-    });
-  }
-
-  window.MaisonUi = {
-    escapeHTML,
-    escapeAttr,
-    showToast,
-    formatDate,
-    daysUntil,
-    categoryLabel,
-    appointmentClass,
-    readImageInput,
-    visualImage,
-    downloadCsv,
-    formatCurrency,
-    bindPriceFormatter
-  };
-})();
+/**
+ * Reemplaza {variables} de una plantilla.
+ * @param {string} plantilla Texto con {llaves}.
+ * @param {Record<string, string>} valores Valores.
+ * @returns {string} Texto final.
+ */
+export function rellenarPlantilla(plantilla, valores) {
+  return String(plantilla || '').replace(/\{(\w+)\}/g, (coincidencia, clave) => valores[clave] ?? coincidencia);
+}

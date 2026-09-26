@@ -1,12 +1,12 @@
-/* Estilos especificos de la agenda del empleado. */
+/* CristaSpa - estilos del módulo del especialista. */
 .employee-hero {
   padding: 18px 16px 14px;
-  background: linear-gradient(160deg, var(--bg-deep), var(--teal));
+  background: linear-gradient(160deg, var(--brand-surface-dark), var(--brand-primary));
   color: var(--white);
 }
 
 .employee-hero .section-title {
-  color: #f4dfaf;
+  color: var(--brand-accent-soft);
 }
 
 .employee-summary {
@@ -18,7 +18,7 @@
 
 .summary-item {
   padding: 10px 8px;
-  border: 1px solid rgba(201, 160, 32, 0.18);
+  border: 1px solid color-mix(in srgb, var(--brand-accent) 18%, transparent);
   border-radius: var(--radius-sm);
   background: rgba(255, 255, 255, 0.06);
   text-align: center;
@@ -26,7 +26,7 @@
 
 .summary-item strong {
   display: block;
-  color: #f4dfaf;
+  color: var(--brand-accent-soft);
   font-family: var(--font-title);
   font-size: 1.3rem;
   line-height: 1;
@@ -78,8 +78,8 @@
   min-width: 62px;
   padding: 8px;
   border-radius: 10px;
-  background: var(--teal);
-  color: var(--white);
+  background: var(--brand-primary);
+  color: var(--brand-on-primary);
   font-weight: 900;
   text-align: center;
 }
@@ -94,4 +94,91 @@
   .employee-filters {
     grid-template-columns: 1fr;
   }
+}
+
+/* ---------------------------------------------------------------------------
+   v2: navegación por fecha, acciones y ausencias
+   --------------------------------------------------------------------------- */
+
+.agenda-controles {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.icon-button.oscuro {
+  background: color-mix(in srgb, var(--brand-primary) 10%, transparent);
+  color: var(--brand-primary);
+  font-size: 1.3rem;
+}
+
+.fecha-actual {
+  min-height: 40px;
+  border-radius: 999px;
+  background: var(--surface-soft);
+  border: 1px solid var(--line);
+  color: var(--text);
+  font-family: var(--font-title);
+  font-size: 1.05rem;
+  cursor: pointer;
+}
+
+.agenda-filtros {
+  margin-bottom: 12px;
+}
+
+.agenda-filtros select {
+  width: auto;
+  min-height: 36px;
+  padding: 0 10px;
+  border-radius: 999px;
+  font-size: 0.8rem;
+}
+
+.dia-separador {
+  margin: 14px 0 4px;
+  color: var(--text-soft);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.time-badge small {
+  display: block;
+  font-size: 0.66rem;
+  font-weight: 700;
+  opacity: 0.85;
+}
+
+.employee-appointment-card .card-text a {
+  color: var(--brand-primary);
+  font-weight: 700;
+}
+
+.acciones-cita {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.acciones-cita button {
+  min-height: 38px;
+  font-size: 0.7rem;
+}
+
+.lista-ausencias {
+  margin-top: 14px;
+}
+
+.field-row.two {
+  grid-template-columns: 1fr 1fr;
+}
+
+.time-badge {
+  background: var(--brand-primary);
+  color: var(--brand-on-primary);
 }

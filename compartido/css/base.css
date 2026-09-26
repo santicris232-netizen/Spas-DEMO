@@ -1,31 +1,43 @@
 /*
-  Maison Lash - estilos base moviles.
-  Este archivo define el lenguaje visual comun para login, usuario, empleado y jefe.
+  CristaSpa - estilos base móviles.
+  Lenguaje visual común para login, usuario, empleado, jefe y desarrollador.
+  Los colores de marca son variables: tenant.js los reemplaza por los de cada
+  empresa (docs/flujos/07-marca-dinamica.md). Todo lo demás se deriva de ellos.
 */
 @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;1,300&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&display=swap');
 
 :root {
-  --bg-deep: #071a1a;
-  --bg-dark: #0c2424;
-  --surface: #faf6ee;
-  --surface-soft: #fffaf1;
-  --surface-muted: #f0e6d4;
-  --line: rgba(12, 36, 36, 0.12);
-  --line-dark: rgba(201, 160, 32, 0.18);
-  --text: #102727;
-  --text-soft: #53615d;
-  --muted: #7d8984;
+  /* Marca: valores por defecto de CristaSpa; cada empresa los sobrescribe. */
+  --brand-primary: #175050;
+  --brand-secondary: #faf6ee;
+  --brand-accent: #c9a020;
+  --brand-on-primary: #ffffff;
+  --brand-on-accent: #ffffff;
+
+  /* Derivados de la marca (no se tocan desde JS). */
+  --brand-primary-strong: color-mix(in srgb, var(--brand-primary) 80%, #ffffff);
+  --brand-accent-strong: color-mix(in srgb, var(--brand-accent) 85%, #ffffff);
+  --brand-accent-soft: color-mix(in srgb, var(--brand-accent) 38%, #ffffff);
+  --brand-surface-dark: color-mix(in srgb, var(--brand-primary) 28%, #000000);
+  --brand-surface-dark-2: color-mix(in srgb, var(--brand-primary) 45%, #000000);
+
+  /* Superficies y texto. */
+  --surface: var(--brand-secondary);
+  --surface-soft: color-mix(in srgb, var(--brand-secondary) 45%, #ffffff);
+  --surface-muted: color-mix(in srgb, var(--brand-secondary) 85%, var(--brand-accent));
+  --line: color-mix(in srgb, var(--brand-surface-dark) 12%, transparent);
+  --line-dark: color-mix(in srgb, var(--brand-accent) 18%, transparent);
+  --text: color-mix(in srgb, var(--brand-primary) 22%, #0b0f0f);
+  --text-soft: color-mix(in srgb, var(--text) 72%, #9aa3a0);
+  --muted: color-mix(in srgb, var(--text) 50%, #b5bcb9);
   --white: #ffffff;
-  --teal: #175050;
-  --teal-2: #247068;
-  --gold: #c9a020;
-  --gold-2: #d4aa40;
-  --rose: #b05b74;
-  --coffee: #8a5a34;
+
+  /* Estados (fijos: no dependen de la marca para no perder significado). */
   --danger: #b54545;
   --success: #237a55;
   --warning: #9b7414;
-  --shadow: 0 18px 42px rgba(7, 26, 26, 0.18);
+
+  --shadow: 0 18px 42px color-mix(in srgb, var(--brand-surface-dark) 18%, transparent);
   --radius: 14px;
   --radius-sm: 8px;
   --font-title: 'Playfair Display', Georgia, serif;
@@ -39,13 +51,13 @@
 
 html {
   min-height: 100%;
-  background: var(--bg-deep);
+  background: var(--brand-surface-dark);
 }
 
 body {
   margin: 0;
   min-height: 100dvh;
-  background: var(--bg-deep);
+  background: var(--brand-surface-dark);
   color: var(--text);
   font-family: var(--font-body);
   font-size: 15px;
@@ -90,7 +102,7 @@ img {
   justify-content: space-between;
   min-height: 60px;
   padding: 12px 16px;
-  background: var(--bg-deep);
+  background: var(--brand-surface-dark);
   color: var(--white);
   border-bottom: 1px solid var(--line-dark);
 }
@@ -101,7 +113,7 @@ img {
 
 .brand-kicker {
   margin: 0 0 2px;
-  color: var(--gold-2);
+  color: var(--brand-accent-strong);
   font-size: 0.62rem;
   font-weight: 700;
   letter-spacing: 0.16em;
@@ -110,7 +122,7 @@ img {
 
 .brand-name {
   margin: 0;
-  color: #f4dfaf;
+  color: var(--brand-accent-soft);
   font-family: var(--font-brand);
   font-size: 1rem;
   font-weight: 600;
@@ -131,8 +143,8 @@ img {
   min-height: 24px;
   padding: 4px 9px;
   border-radius: 999px;
-  background: rgba(201, 160, 32, 0.12);
-  color: var(--gold-2);
+  background: color-mix(in srgb, var(--brand-accent) 12%, transparent);
+  color: var(--brand-accent-strong);
   font-size: 0.68rem;
   font-weight: 700;
   letter-spacing: 0.08em;
@@ -147,7 +159,7 @@ img {
   height: 36px;
   border-radius: 50%;
   background: rgba(255, 255, 255, 0.08);
-  color: #f4dfaf;
+  color: var(--brand-accent-soft);
   cursor: pointer;
 }
 
@@ -164,7 +176,7 @@ img {
 
 .section-kicker {
   margin: 0 0 12px;
-  color: var(--gold);
+  color: var(--brand-accent);
   font-size: 0.7rem;
   font-weight: 700;
   letter-spacing: 0.16em;
@@ -209,8 +221,8 @@ img {
 }
 
 .segment-button.active {
-  background: var(--teal);
-  color: var(--white);
+  background: var(--brand-primary);
+  color: var(--brand-on-primary);
 }
 
 @keyframes fadeInUp {
@@ -243,7 +255,7 @@ img {
   border: 1px solid var(--line);
   border-radius: var(--radius);
   background: var(--surface-soft);
-  box-shadow: 0 8px 24px rgba(12, 36, 36, 0.06);
+  box-shadow: 0 8px 24px color-mix(in srgb, var(--brand-surface-dark) 6%, transparent);
   overflow: hidden;
 }
 
@@ -277,8 +289,8 @@ img {
   min-height: 24px;
   padding: 3px 8px;
   border-radius: 999px;
-  background: rgba(23, 80, 80, 0.09);
-  color: var(--teal);
+  background: color-mix(in srgb, var(--brand-primary) 9%, transparent);
+  color: var(--brand-primary);
   font-size: 0.72rem;
   font-weight: 700;
 }
@@ -288,7 +300,7 @@ img {
   width: 100%;
   height: 148px;
   object-fit: cover;
-  background: linear-gradient(135deg, rgba(23, 80, 80, 0.14), rgba(201, 160, 32, 0.16));
+  background: linear-gradient(135deg, color-mix(in srgb, var(--brand-primary) 14%, transparent), color-mix(in srgb, var(--brand-accent) 16%, transparent));
 }
 
 .image-fallback {
@@ -296,8 +308,8 @@ img {
   align-items: center;
   justify-content: center;
   height: 148px;
-  background: linear-gradient(135deg, rgba(23, 80, 80, 0.16), rgba(201, 160, 32, 0.18));
-  color: var(--teal);
+  background: linear-gradient(135deg, color-mix(in srgb, var(--brand-primary) 16%, transparent), color-mix(in srgb, var(--brand-accent) 18%, transparent));
+  color: var(--brand-primary);
   font-family: var(--font-brand);
   font-size: 1.8rem;
   font-weight: 700;
@@ -362,8 +374,8 @@ select[multiple] {
 input:focus,
 select:focus,
 textarea:focus {
-  border-color: var(--gold);
-  box-shadow: 0 0 0 3px rgba(201, 160, 32, 0.14);
+  border-color: var(--brand-accent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--brand-accent) 14%, transparent);
 }
 
 .file-field {
@@ -371,9 +383,9 @@ textarea:focus {
   display: grid;
   gap: 8px;
   padding: 12px;
-  border: 1px dashed rgba(23, 80, 80, 0.28);
+  border: 1px dashed color-mix(in srgb, var(--brand-primary) 28%, transparent);
   border-radius: var(--radius-sm);
-  background: rgba(23, 80, 80, 0.05);
+  background: color-mix(in srgb, var(--brand-primary) 5%, transparent);
 }
 
 .file-field input[type='file'] {
@@ -401,13 +413,13 @@ textarea:focus {
 }
 
 .primary-button {
-  background: var(--teal);
-  color: var(--white);
+  background: var(--brand-primary);
+  color: var(--brand-on-primary);
 }
 
 .secondary-button {
-  background: rgba(23, 80, 80, 0.09);
-  color: var(--teal);
+  background: color-mix(in srgb, var(--brand-primary) 9%, transparent);
+  color: var(--brand-primary);
 }
 
 .danger-button {
@@ -438,13 +450,13 @@ textarea:focus {
   display: flex;
   align-items: flex-end;
   justify-content: center;
-  background: rgba(7, 26, 26, 0);
+  background: color-mix(in srgb, var(--brand-surface-dark) 0%, transparent);
   pointer-events: none;
   transition: background-color 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .sheet-backdrop.active {
-  background: rgba(7, 26, 26, 0.52);
+  background: color-mix(in srgb, var(--brand-surface-dark) 52%, transparent);
   pointer-events: auto;
 }
 
@@ -497,16 +509,16 @@ textarea:focus {
 .availability-slot {
   min-height: 44px;
   border-radius: var(--radius-sm);
-  background: rgba(23, 80, 80, 0.09);
-  color: var(--teal);
+  background: color-mix(in srgb, var(--brand-primary) 9%, transparent);
+  color: var(--brand-primary);
   font-size: 0.78rem;
   font-weight: 800;
   cursor: pointer;
 }
 
 .availability-slot.selected {
-  background: var(--gold);
-  color: var(--white);
+  background: var(--brand-accent);
+  color: var(--brand-on-accent);
 }
 
 .availability-slot.occupied,
@@ -525,7 +537,7 @@ textarea:focus {
   max-width: 452px;
   transform: translateX(-50%) translateY(120px);
   border-radius: var(--radius-sm);
-  background: var(--bg-deep);
+  background: var(--brand-surface-dark);
   color: var(--white);
   padding: 12px 14px;
   opacity: 0;
@@ -548,8 +560,8 @@ textarea:focus {
 }
 
 .status-completada {
-  background: rgba(23, 80, 80, 0.12);
-  color: var(--teal);
+  background: color-mix(in srgb, var(--brand-primary) 12%, transparent);
+  color: var(--brand-primary);
 }
 
 .status-cancelada {
@@ -557,28 +569,226 @@ textarea:focus {
   color: var(--danger);
 }
 
-.calendar-cejas {
-  border-left: 5px solid var(--coffee);
+.status-no_asistio {
+  background: color-mix(in srgb, var(--text) 10%, transparent);
+  color: var(--text-soft);
 }
 
-.calendar-pestanas {
-  border-left: 5px solid var(--gold);
+/* Tarjeta de cita: el borde toma el color de la categoría (style="--categoria: #hex"). */
+.agenda-card {
+  border-left: 5px solid var(--categoria, var(--brand-primary));
 }
 
-.calendar-labios {
-  border-left: 5px solid var(--rose);
+/* ---------------------------------------------------------------------------
+   Componentes v2 compartidos
+   --------------------------------------------------------------------------- */
+
+.brand-logo {
+  width: 36px;
+  height: 36px;
+  flex: 0 0 auto;
+  border-radius: 10px;
+  object-fit: cover;
+  background: color-mix(in srgb, var(--brand-accent) 18%, transparent);
 }
 
-.calendar-all {
-  border-left: 5px solid var(--teal);
+.brand-logo-fallback {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--brand-accent-soft);
+  font-family: var(--font-brand);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+
+.brand-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.banner {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 8px 14px;
+  background: var(--warning);
+  color: var(--white);
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.banner button {
+  flex: 0 0 auto;
+  min-height: 30px;
+  padding: 0 10px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.2);
+  color: var(--white);
+  font-size: 0.7rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.banner-offline {
+  background: var(--danger);
+}
+
+.page-state {
+  display: grid;
+  place-items: center;
+  gap: 14px;
+  min-height: 70dvh;
+  padding: 24px;
+  text-align: center;
+}
+
+.page-state h2 {
+  margin: 0;
+  font-family: var(--font-title);
+  font-size: 1.5rem;
+}
+
+.page-state p {
+  margin: 0;
+  color: var(--text-soft);
+}
+
+.skeleton {
+  height: 84px;
+  border-radius: var(--radius);
+  background: linear-gradient(90deg, var(--surface-muted), var(--surface-soft), var(--surface-muted));
+  background-size: 200% 100%;
+  animation: skeleton 1.2s ease-in-out infinite;
+}
+
+@keyframes skeleton {
+  from { background-position: 200% 0; }
+  to { background-position: -200% 0; }
+}
+
+.chip-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.chip-option {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 36px;
+  padding: 0 12px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--surface-soft);
+  color: var(--text-soft);
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.chip-option input {
+  width: auto;
+  min-height: auto;
+}
+
+.chip-option:has(input:checked),
+.chip-option.active {
+  border-color: var(--brand-primary);
+  background: color-mix(in srgb, var(--brand-primary) 12%, transparent);
+  color: var(--brand-primary);
+}
+
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(96px, 1fr));
+  gap: 8px;
+}
+
+.stat-tile {
+  padding: 12px 10px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: var(--surface-soft);
+}
+
+.stat-tile strong {
+  display: block;
+  font-family: var(--font-title);
+  font-size: 1.4rem;
+  line-height: 1.1;
+}
+
+.stat-tile span {
+  display: block;
+  margin-top: 4px;
+  color: var(--text-soft);
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.check-field {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  color: var(--text-soft);
+  font-size: 0.84rem;
+}
+
+.check-field input {
+  width: 18px;
+  min-height: 18px;
+  margin-top: 2px;
+}
+
+.link-button {
+  padding: 0;
+  background: none;
+  color: var(--brand-primary);
+  font-size: 0.84rem;
+  font-weight: 700;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.muted-text {
+  color: var(--text-soft);
+  font-size: 0.84rem;
+}
+
+.powered-by {
+  margin: 0;
+  color: color-mix(in srgb, var(--brand-accent-soft) 70%, transparent);
+  font-size: 0.7rem;
+  letter-spacing: 0.06em;
+  text-align: center;
+}
+
+.soporte-activo [data-escritura] {
+  display: none !important;
+}
+
+:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--brand-accent) 60%, transparent);
+  outline-offset: 2px;
 }
 
 @media (min-width: 520px) {
   body {
-    background: radial-gradient(circle at top, rgba(201, 160, 32, 0.12), transparent 36%), var(--bg-deep);
+    background: radial-gradient(circle at top, color-mix(in srgb, var(--brand-accent) 12%, transparent), transparent 36%), var(--brand-surface-dark);
   }
 
   .mobile-shell {
-    box-shadow: 0 0 0 1px rgba(201, 160, 32, 0.14), var(--shadow);
+    box-shadow: 0 0 0 1px color-mix(in srgb, var(--brand-accent) 14%, transparent), var(--shadow);
   }
 }

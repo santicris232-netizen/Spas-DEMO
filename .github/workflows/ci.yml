@@ -1,0 +1,48 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main, feature/cristaspa-v2]
+
+jobs:
+  base-de-datos:
+    name: Esquema, RLS y reglas de negocio
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Instalar dependencias
+        run: npm ci
+
+      - name: Revisar secretos
+        run: npm run check:secrets
+
+      - name: Pruebas de base de datos (PGlite)
+        run: npm run test:db
+
+  supabase-real:
+    name: Migraciones en Supabase local
+    runs-on: ubuntu-latest
+    needs: base-de-datos
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: supabase/setup-cli@v1
+        with:
+          version: 2.118.0
+
+      - name: Levantar Supabase y aplicar migraciones
+        run: supabase start -x studio,imgproxy,inbucket,edge-runtime,logflare,vector,supavisor
+
+      - name: Lint del esquema
+        run: supabase db lint --level warning --fail-on error
+
+      - name: Detener Supabase
+        if: always()
+        run: supabase stop --no-backup
